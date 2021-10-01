@@ -11,14 +11,8 @@ password = 'LaNegra.1970'
 driver = '{ODBC Driver 17 for SQL Server}'
 
 try:
-
-    conexion = pyodbc.connect(
-        f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password};Trusted_Connection=no')
-
-    """
     conexion = pyodbc.connect(
         f'DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection=yes')
-    """
 
     cursor = conexion.cursor()
     cursor.execute("EXEC SP_Iniciar_ETL")
