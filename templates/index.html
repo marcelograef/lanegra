@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<h1>Establecimientos La Negra Reporting</h1>
+<form action="/run_script" method="POST">
+    <label for="start">Desde:</label>
+    <input type="date" id="start" name="report-start" required>
+
+    <label for="finish">Hasta:</label>
+    <input type="date" id="finish" name="report-finish" required>
+
+    <input type="submit" value="Enviar" onClick="reply_click()">
+</form>
+<div id="loading"  style="display:none"></div>
+{% endblock %}
