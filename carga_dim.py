@@ -1,5 +1,5 @@
 """
-    @author Juan Pablo Mantelli 
+    @author Juan Pablo Mantelli
 """
 import json
 import requests
@@ -18,10 +18,10 @@ if __name__ == "__main__":
     functions.updateProcessState(response_process.Proceso_Key, 1)
 
     dimensions = [
-        ['empresa',"Int_Dim_Empresa"], 
-        ['cuenta',"Int_Dim_Cuenta"], 
-        ['zona',"Int_Dim_Zona"], 
-        ['haciendacategoria',"Int_Dim_Hacienda_Categoria"], 
+        ['empresa',"Int_Dim_Empresa"],
+        ['cuenta',"Int_Dim_Cuenta"],
+        ['zona',"Int_Dim_Zona"],
+        ['haciendacategoria',"Int_Dim_Hacienda_Categoria"],
         ['establecimiento',"Int_Dim_Establecimiento"],
         ['producto',"Int_Dim_Producto"],
         ['lote',"Int_Dim_Lote"],
@@ -70,19 +70,19 @@ if __name__ == "__main__":
         ['Int_Dim_Categoria_Producto_Arbol',"PRODUCTOS_STD"],
         ['arbolLabor',"LABOR_STD"]
     ]
-    
-    
+
+
     print(id_lote)
     print(response_process)
-    
+
 
     try:
         for dim in dimensions:
 
             response = api_requests.init()
-    
+
             token = response.text
-   
+
             response = api_requests.dimension(token, dim[0])
 
             myObj = response.json()
@@ -91,35 +91,35 @@ if __name__ == "__main__":
             functions.deleteTable(dim[1])
             functions.insertDimension(myObj, dim[1])
             functions.auditoria(dim[1], response_process.Proceso_Key)
-        
+
     except Exception as e_dim:
         print("Ocurrió un error al cargar dimensiones ", e_dim)
-        conexion.commit()  
-       
+        conexion.commit()
+
 
     try:
-            for dimw in dimensions_w_parameters:
+        for dimw in dimensions_w_parameters:
 
-                functions.deleteTable(dimw[1])
+            functions.deleteTable(dimw[1])
 
-                for rama in parameters:
-    
-                    if ( rama[0] ==  dimw[1] ):
-                        response = api_requests.dimensions_w_parameters(token, dimw[0], rama[1])
+            for rama in parameters:
 
-                        myObj = response.json()
+                if ( rama[0] ==  dimw[1] ):
+                    response = api_requests.dimensions_w_parameters(token, dimw[0], rama[1])
 
-                        functions.insertDimension(myObj, dimw[1])
-                    
-            functions.auditoria(dimw[1], response_process.Proceso_Key)
-        #close the connection to the database.
+                    myObj = response.json()
+
+                    functions.insertDimension(myObj, dimw[1])
+
+        functions.auditoria(dimw[1], response_process.Proceso_Key)
+    #close the connection to the database.
 
     except Exception as e_dimw:
             print("Ocurrió un error al cargar dimensiones con parametros ", e_dimw)
 
-            conexion.commit()   
-        
+            conexion.commit()
+
             functions.auditoria(dimw[1], response_process.Proceso_Key)
             functions.updateProcessState(response_process.Proceso_Key, 2)
             conexion.commit()
-            cursor.close() 
+            cursor.close()

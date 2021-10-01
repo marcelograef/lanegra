@@ -1,5 +1,5 @@
 """
-    @author Juan Pablo Mantelli 
+    @author Juan Pablo Mantelli
 """
 import requests
 
@@ -16,7 +16,7 @@ def init():
 
 
 
-def libromayoreln(token, moneda, fechas, dimension ): # = remplaze'DIMCTC' por dimension 
+def libromayoreln(token, moneda, fechas, dimension ): # = remplaze'DIMCTC' por dimension
     print(dimension)
     print(moneda)
     parameters = {
@@ -50,8 +50,8 @@ def interface(token, interface):
 
     parameters = {
         "ACCESS_TOKEN": token,
-        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01' 
-        "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d')    # remplaze '2021-01-31'
+        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01' desde principio mes
+        "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d')    # remplaze '2021-01-31' hasta current day
     }
 
     return requests.get("https://api.teamplace.finneg.com/api/reports/"+interface+"?", params=parameters)
@@ -60,7 +60,7 @@ def sanidad(token, moneda):
 
     parameters = {
         "ACCESS_TOKEN": token,
-        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01' 
+        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01'
         "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d'),   # remplaze '2021-01-31'
         "PARAMWEBREPORT_TipoPrecio": 1,
         "PARAMWEBREPORT_Moneda": moneda
@@ -73,16 +73,16 @@ def suplementacion(token, moneda):
 
     parameters = {
         "ACCESS_TOKEN": token,
-        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01' 
+        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01'
         "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d'),   # remplaze '2021-01-31'
         "PARAMWEBREPORT_TipoPrecio": 1,
         "PARAMWEBREPORT_Moneda": moneda
     }
-    
+
 
     return requests.get("https://api.teamplace.finneg.com/api/reports/suplementacionHaciendaELN?", params=parameters)
 
-def int_conMoneda(token, moneda, reporte, fechas, dimension ): # = remplaze'DIMCTC' por dimension 
+def int_conMoneda(token, moneda, reporte, fechas, dimension ): # = remplaze'DIMCTC' por dimension
     print(dimension)
     print(moneda)
     parameters = {
@@ -147,7 +147,7 @@ def dimensions_w_parameters(token, dimension, p):
         "Arbol": p,
         "Detalle": 0
     }
-    
+
     return requests.get("https://api.teamplace.finneg.com/api/reports/"+dimension+"?", params=parameters)
 
 
