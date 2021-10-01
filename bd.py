@@ -4,7 +4,6 @@
 import pyodbc
 
 server = 'SD-1887927-W\DEV'
-server = '179.43.118.246'
 database = 'DW_ELN'
 username = 'SD-1887927-W\gestion'
 password = 'LaNegra.1970'

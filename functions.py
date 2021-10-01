@@ -35,6 +35,7 @@ def insertDimension(r, d):
         valuelist = "("
         firstPair = True
         for key, value in json.items():
+            
             if not firstPair:
                 keylist += ", "
                 valuelist += ", "

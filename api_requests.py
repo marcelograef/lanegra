@@ -137,6 +137,9 @@ def dimension(token, dimension):
         "ACCESS_TOKEN": token
     }
 
+    print("https://api.teamplace.finneg.com/api/"+dimension +"/list?")
+    print(parameters)
+
     return requests.get("https://api.teamplace.finneg.com/api/"+dimension+"/list?", params=parameters)
 
 
