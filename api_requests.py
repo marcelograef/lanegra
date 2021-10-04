@@ -15,8 +15,7 @@ def init():
     return requests.get("https://api.teamplace.finneg.com/api/oauth/token?", params=parameters)
 
 
-
-def libromayoreln(token, moneda, fechas, dimension ): # = remplaze'DIMCTC' por dimension
+def libromayoreln(token, moneda, fechas, dimension):  # = remplaze'DIMCTC' por dimension
     print(dimension)
     print(moneda)
     parameters = {
@@ -26,7 +25,7 @@ def libromayoreln(token, moneda, fechas, dimension ): # = remplaze'DIMCTC' por d
         "PARAMWEBREPORT_dimension": dimension,
         "PARAMWEBREPORT_verpor": '0',
         "PARAMWEBREPORT_Moneda": moneda,
-        "PARAMWEBREPORT_Empresa": 'EMPRE01' ## Validar
+        "PARAMWEBREPORT_Empresa": 'EMPRE01'  # Validar
     }
 
     return requests.get("https://api.teamplace.finneg.com/api/reports/libromayoreln?", params=parameters)
@@ -45,23 +44,27 @@ def libromayorelnx(token, moneda, fechas, libromayor):
     return requests.get("https://api.teamplace.finneg.com/api/reports/"+libromayor+"?", params=parameters)
 
 
-
 def interface(token, interface):
 
     parameters = {
         "ACCESS_TOKEN": token,
-        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01' desde principio mes
-        "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d')    # remplaze '2021-01-31' hasta current day
+        # remplaze '2021-01-01' desde principio mes
+        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),
+        # remplaze '2021-01-31' hasta current day
+        "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d')
     }
 
     return requests.get("https://api.teamplace.finneg.com/api/reports/"+interface+"?", params=parameters)
+
 
 def sanidad(token, moneda):
 
     parameters = {
         "ACCESS_TOKEN": token,
-        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01'
-        "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d'),   # remplaze '2021-01-31'
+        # remplaze '2021-01-01'
+        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),
+        # remplaze '2021-01-31'
+        "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d'),
         "PARAMWEBREPORT_TipoPrecio": 1,
         "PARAMWEBREPORT_Moneda": moneda
     }
@@ -73,16 +76,19 @@ def suplementacion(token, moneda):
 
     parameters = {
         "ACCESS_TOKEN": token,
-        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),   # remplaze '2021-01-01'
-        "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d'),   # remplaze '2021-01-31'
+        # remplaze '2021-01-01'
+        "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),
+        # remplaze '2021-01-31'
+        "PARAMWEBREPORT_fechaHasta": fechas[1].strftime('%Y-%m-%d'),
         "PARAMWEBREPORT_TipoPrecio": 1,
         "PARAMWEBREPORT_Moneda": moneda
     }
 
-
     return requests.get("https://api.teamplace.finneg.com/api/reports/suplementacionHaciendaELN?", params=parameters)
 
-def int_conMoneda(token, moneda, reporte, fechas, dimension ): # = remplaze'DIMCTC' por dimension
+
+# = remplaze'DIMCTC' por dimension
+def int_conMoneda(token, moneda, reporte, fechas, dimension):
     print(dimension)
     print(moneda)
     parameters = {
@@ -95,6 +101,7 @@ def int_conMoneda(token, moneda, reporte, fechas, dimension ): # = remplaze'DIMC
     }
 
     return requests.get("https://api.teamplace.finneg.com/api/reports/"+reporte+"?", params=parameters)
+
 
 def int_stock(token, moneda, reporte, fechas, agrupa_por):
     print(moneda)
@@ -114,7 +121,7 @@ def int_stock(token, moneda, reporte, fechas, agrupa_por):
 
 
 def planificaciones(token, reporte):
-    ## no tiene fecha como parametro
+    # no tiene fecha como parametro
     empresa = ''
     if reporte == 'planificacionAgricola':
         empresa = '[EMPRE01,ESC47]'
@@ -132,13 +139,9 @@ def planificaciones(token, reporte):
 
 def dimension(token, dimension):
 
-
     parameters = {
         "ACCESS_TOKEN": token
     }
-
-    print("https://api.teamplace.finneg.com/api/"+dimension +"/list?")
-    print(parameters)
 
     return requests.get("https://api.teamplace.finneg.com/api/"+dimension+"/list?", params=parameters)
 
@@ -179,7 +182,7 @@ def int_ingresosYEgresos(token, moneda, reporte, fechas):
         "PARAMWEBREPORT_tipoStock": 0,
         "PARAMWEBREPORT_Empresa": "EMPRE01",
         "PARAMWEBREPORT_Moneda": moneda
-        #"PARAMWEBREPORT_TipoPrecio": 1,
+        # "PARAMWEBREPORT_TipoPrecio": 1,
     }
 
     return requests.get("https://api.teamplace.finneg.com/api/reports/"+reporte+"?", params=parameters)

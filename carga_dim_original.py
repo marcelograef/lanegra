@@ -2,14 +2,20 @@
     @author Juan Pablo Mantelli
 """
 import json
-
-import pandas as pd
 import requests
+import pandas as pd
 
 import api_requests
 import functions
+from bd import conexion
+
+cursor = conexion.cursor()
 
 if __name__ == "__main__":
+
+    id_lote = functions.getLoteKey('Carga_Int_Dim_Py')
+    response_process = functions.getLastProcessKeyByLote(id_lote)
+    functions.updateProcessState(response_process.Proceso_Key, 1)
 
     dimensions = [
         ['empresa', "Int_Dim_Empresa"],
@@ -64,6 +70,9 @@ if __name__ == "__main__":
         ['arbolLabor', "LABOR_STD"]
     ]
 
+    print(id_lote)
+    print(response_process)
+
     response = api_requests.init()
 
     token = response.text
@@ -77,15 +86,18 @@ if __name__ == "__main__":
 
             myObj = response.json()
 
-            df = pd.DataFrame(myObj)
-
-            functions.insertDimension(df, dim[1])
+            functions.deleteTable(dim[1])
+            functions.insertDimension(myObj, dim[1])
+            functions.auditoria(dim[1], response_process.Proceso_Key)
 
     except Exception as e_dim:
         print("Ocurrió un error al cargar dimensiones ", e_dim)
+        conexion.commit()
 
     try:
         for dimw in dimensions_w_parameters:
+
+            functions.deleteTable(dimw[1])
 
             for rama in parameters:
 
@@ -97,7 +109,15 @@ if __name__ == "__main__":
 
                     functions.insertDimension(myObj, dimw[1])
 
+        functions.auditoria(dimw[1], response_process.Proceso_Key)
     # close the connection to the database.
 
     except Exception as e_dimw:
         print("Ocurrió un error al cargar dimensiones con parametros ", e_dimw)
+
+        conexion.commit()
+
+        functions.auditoria(dimw[1], response_process.Proceso_Key)
+        functions.updateProcessState(response_process.Proceso_Key, 2)
+        conexion.commit()
+        cursor.close()
