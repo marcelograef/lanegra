@@ -20,6 +20,11 @@ if __name__ == "__main__":
     print()
 
     id_lote = functions.getLoteKey('Carga_Int_Fact_Py')
+    print()
+    print()
+    print("idLote: ", id_lote)
+    print()
+    print()
     response_process = functions.getLastProcessKeyByLote(id_lote)
     functions.updateProcessState(response_process.Proceso_Key, 1)
     
@@ -107,12 +112,12 @@ if __name__ == "__main__":
             for y in range(0,len(dimension)):
 
                 response = api_requests.int_conMoneda(token, monedas[x], table[0], fechas, dimension[y]) # remplaze 'DIMCTC' por dimension
-            print(response)
-            myObj = response.json()
-            
-            #functions.deleteTable(table[1])
-            functions.insertDimension(pd.DataFrame(myObj), table[1])
-            # functions.auditoria(table[1], response_process.Proceso_Key)
+                print(response)
+                myObj = response.json()
+                
+                #functions.deleteTable(table[1])
+                functions.insertDimension(pd.DataFrame(myObj), table[1])
+                # functions.auditoria(table[1], response_process.Proceso_Key)
     conexion.commit()
     
     for st in stock:

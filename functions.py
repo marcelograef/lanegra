@@ -102,8 +102,5 @@ def updateTable(table, field, value):
 
 
 def auditoria(table, process_key):
-    print()
-    print("AUDITORIA")
-    print(table, process_key)
     with get_cursor() as cursor:
         cursor.execute("UPDATE "+ table +" SET fecha_proce_escritura = (?), Proceso_Key = (?)", (datetime.datetime.now(),process_key))
