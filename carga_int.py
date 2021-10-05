@@ -8,11 +8,16 @@ from datetime import datetime
 
 import api_requests
 import functions
-from bd import conexion
+from bd import get_connection, get_cursor
 
-cursor = conexion.cursor()
+conexion = get_connection()
+cursor = get_cursor()
 
 if __name__ == "__main__":
+
+    print()
+    print("Starting carga int")
+    print()
 
     id_lote = functions.getLoteKey('Carga_Int_Fact_Py')
     response_process = functions.getLastProcessKeyByLote(id_lote)
@@ -72,6 +77,9 @@ if __name__ == "__main__":
         ['LIBROMAYORELNPN',"Int_Mayor_Pn"]
     ]
 
+    response = api_requests.init()
+        
+    token = response.text
 
     for table in consumosProduccion:
 
@@ -80,10 +88,7 @@ if __name__ == "__main__":
         
         for x in range(0,len(monedas)):
             for y in range(0,len(dimension)):
-                response = api_requests.init()
-        
-                token = response.text
-
+                
                 response = api_requests.int_conMoneda(token, monedas[x], table[0], fechas, dimension[y])
 
                 myObj = response.json()
@@ -91,8 +96,8 @@ if __name__ == "__main__":
                     field_dict['TIPO_DIMENSION'] = dimension[y]
                     
                 #functions.deleteTable(table[1])
-                functions.insertDimension(myObj, table[1])
-                functions.auditoria(table[1], response_process.Proceso_Key)
+                functions.insertDimension(pd.DataFrame(myObj), table[1])
+                # functions.auditoria(table[1], response_process.Proceso_Key)
     conexion.commit()
     for table in conDobleMoneda:
 
@@ -100,17 +105,14 @@ if __name__ == "__main__":
         dimension = ["DIMCTC","DIMMAQ"] # Agregue la dimesion moneda por que esta hardcodead un solo tipo DIMCTC y dim DIMMAQ
         for x in range(0,len(monedas)):
             for y in range(0,len(dimension)):
-                response = api_requests.init()
-    
-                token = response.text
 
                 response = api_requests.int_conMoneda(token, monedas[x], table[0], fechas, dimension[y]) # remplaze 'DIMCTC' por dimension
             print(response)
             myObj = response.json()
             
             #functions.deleteTable(table[1])
-            functions.insertDimension(myObj, table[1])
-            functions.auditoria(table[1], response_process.Proceso_Key)
+            functions.insertDimension(pd.DataFrame(myObj), table[1])
+            # functions.auditoria(table[1], response_process.Proceso_Key)
     conexion.commit()
     
     for st in stock:
@@ -127,17 +129,13 @@ if __name__ == "__main__":
         
         for x in range(0,len(monedas)):
 
-            response = api_requests.init()
-    
-            token = response.text
-
             response = api_requests.int_stock(token, monedas[x], st[0],fechas, agrupa_por)
 
             myObj = response.json()
             
             #functions.deleteTable(st[1])
-            functions.insertDimension(myObj, st[1])
-            functions.auditoria(st[1], response_process.Proceso_Key)
+            functions.insertDimension(pd.DataFrame(myObj), st[1])
+            # functions.auditoria(st[1], response_process.Proceso_Key)
     conexion.commit()        
     for lme in libromayorelnx:
 
@@ -155,8 +153,8 @@ if __name__ == "__main__":
             myObj = response.json()
             
             #functions.deleteTable(lme[1])
-            functions.insertDimension(myObj, lme[1])
-            functions.auditoria(lme[1], response_process.Proceso_Key)
+            functions.insertDimension(pd.DataFrame(myObj), lme[1])
+            # functions.auditoria(lme[1], response_process.Proceso_Key)
     conexion.commit()
 
     for lme in libromayoreln:
@@ -166,9 +164,7 @@ if __name__ == "__main__":
         
         for x in range(0,len(monedas)):
             for y in range(0,len(dimension)):
-                response = api_requests.init()
-        
-                token = response.text
+
 
                 response = api_requests.libromayoreln(token, monedas[x], fechas,  dimension[y])
                 print(response)
@@ -177,29 +173,21 @@ if __name__ == "__main__":
                     field_dict['TIPO_DIMENSION'] = dimension[y]
                     
                     #functions.deleteTable(lme[1])
-                    functions.insertDimension(myObj, lme[1])
-                    functions.auditoria(lme[1], response_process.Proceso_Key)
+                    functions.insertDimension(pd.DataFrame(myObj), lme[1])
+                    # functions.auditoria(lme[1], response_process.Proceso_Key)
     conexion.commit()    
     for table2 in mainstables2:
-
-        response = api_requests.init()
-    
-        token = response.text
 
         response = api_requests.interface(token, table2[0])
 
         myObj = response.json()
 
         #functions.deleteTable(table2[1])
-        functions.insertDimension(myObj, table2[1])
-        functions.auditoria(table2[1], response_process.Proceso_Key)
+        functions.insertDimension(pd.DataFrame(myObj), table2[1])
+        # functions.auditoria(table2[1], response_process.Proceso_Key)
         
     conexion.commit()    
     for planif in planificaciones:
-
-        response = api_requests.init()
-    
-        token = response.text
 
         response = api_requests.planificaciones(token, planif[0])
 
@@ -208,8 +196,8 @@ if __name__ == "__main__":
         myObj = response.json()
 
         #functions.deleteTable(planif[1])
-        functions.insertDimension(myObj, planif[1])
-        functions.auditoria(planif[1], response_process.Proceso_Key)
+        functions.insertDimension(pd.DataFrame(myObj), planif[1])
+        # functions.auditoria(planif[1], response_process.Proceso_Key)
     conexion.commit()
     for lote in analisislote:
 
@@ -217,17 +205,14 @@ if __name__ == "__main__":
         
         for x in range(0,len(monedas)):
 
-            response = api_requests.init()
-    
-            token = response.text
 
             response = api_requests.LoteAna(token, monedas[x], lote[0], fechas)
             print(response)
             myObj = response.json()
             
             #functions.deleteTable(lote[1])
-            functions.insertDimension(myObj, lote[1])
-            functions.auditoria(lote[1], response_process.Proceso_Key)
+            functions.insertDimension(pd.DataFrame(myObj), lote[1])
+            # functions.auditoria(lote[1], response_process.Proceso_Key)
 
     conexion.commit()
     for table in ingresosYEgresos:
@@ -236,17 +221,14 @@ if __name__ == "__main__":
         
         for x in range(0,len(monedas)):
 
-            response = api_requests.init()
-    
-            token = response.text
 
             response = api_requests.int_ingresosYEgresos(token, monedas[x], table[0], fechas)
             print(response)
             myObj = response.json()
             
             #functions.deleteTable(table[1])
-            functions.insertDimension(myObj, table[1])
-            functions.auditoria(table[1], response_process.Proceso_Key)
+            functions.insertDimension(pd.DataFrame(myObj), table[1])
+            # functions.auditoria(table[1], response_process.Proceso_Key)
     
     #close the connection to the database.
     conexion.commit()

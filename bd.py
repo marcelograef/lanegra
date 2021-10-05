@@ -11,9 +11,28 @@ password = 'LaNegra.1970'
 driver = '{ODBC Driver 17 for SQL Server}'
 
 
-def get_connection():
+def get_engine():
     return create_engine('mssql+pyodbc://' + server + '/' + database + '?trusted_connection=yes&driver=ODBC+Driver+17+for+SQL+Server')
 
+
+def get_connection():
+    try:
+
+        return pyodbc.connect(
+            f'DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection=yes')
+
+    except Exception as e:
+        print("Ocurrió un error al conectar a SQL Server: ", e)
+
+def get_cursor():
+    try:
+
+        conexion = pyodbc.connect(
+            f'DRIVER={driver};SERVER={server};DATABASE={database};Trusted_Connection=yes')
+
+        return conexion.cursor()
+    except Exception as e:
+        print("Ocurrió un error al conectar a SQL Server: ", e)
 
 if __name__ == '__main__':
     try:

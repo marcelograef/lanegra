@@ -4,11 +4,11 @@ import subprocess
 from datetime import datetime
 import api_requests
 import functions
-
+""" 
 from bd import conexion
 
 cursor = conexion.cursor()
-
+ """
 app = Flask(__name__)
 
 @app.route("/")
@@ -18,6 +18,12 @@ def home():
 @app.route("/run_script", methods=['GET', 'POST'])
 def run_script():
     data = request.form
+
+    print()
+    print("data")
+    print(data)
+    print()
+
     fecha_inicio    = data['report-start']
     fecha_fin       = data['report-finish']
 

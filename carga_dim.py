@@ -13,6 +13,10 @@ import functions
 
 if __name__ == "__main__":
 
+    id_lote = functions.getLoteKey('Carga_Int_Dim_Py')
+    response_process = functions.getLastProcessKeyByLote(id_lote)
+    functions.updateProcessState(response_process.Proceso_Key, 1)
+
     start_time = time.time()
     dimensions = [
         ['empresa', "Int_Dim_Empresa"],
