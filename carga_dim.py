@@ -5,12 +5,15 @@ import json
 
 import pandas as pd
 import requests
+import traceback
+import time
 
 import api_requests
 import functions
 
 if __name__ == "__main__":
 
+    start_time = time.time()
     dimensions = [
         ['empresa', "Int_Dim_Empresa"],
         ['cuenta', "Int_Dim_Cuenta"],
@@ -28,7 +31,7 @@ if __name__ == "__main__":
         ['conceptoValorizacion', "Int_Dim_Concepto_Valorizacion"],
         ['Organizacion', "Int_Dim_Organizacion"],
         ['labor', "Int_Dim_Labor"],
-        # ['actividad', "Int_Dim_Actividad"] # este endpoint no está implementado
+        ['actividad', "Int_Dim_Actividad"] # este endpoint no está implementado
     ]
 
     dimensions_w_parameters = [
@@ -64,6 +67,8 @@ if __name__ == "__main__":
         ['arbolLabor', "LABOR_STD"]
     ]
 
+    process_errors = []
+
     response = api_requests.init()
 
     token = response.text
@@ -82,7 +87,9 @@ if __name__ == "__main__":
             functions.insertDimension(df, dim[1])
 
     except Exception as e_dim:
-        print("Ocurrió un error al cargar dimensiones ", e_dim)
+        # traceback.print_exc()
+        # print("Ocurrió un error al cargar dimensiones ", e_dim)
+        process_errors.append(dim)
 
     try:
         for dimw in dimensions_w_parameters:
@@ -95,9 +102,25 @@ if __name__ == "__main__":
 
                     myObj = response.json()
 
-                    functions.insertDimension(myObj, dimw[1])
+                    functions.insertDimension(pd.DataFrame(myObj), dimw[1])
 
     # close the connection to the database.
 
     except Exception as e_dimw:
-        print("Ocurrió un error al cargar dimensiones con parametros ", e_dimw)
+        #print("Ocurrió un error al cargar dimensiones con parametros ", e_dimw)
+        process_errors.append(dimw)
+
+    if len(process_errors) >0:
+        print("*******************")
+        print("Tablas que no cargaron")
+        for e in process_errors:
+            print(e)
+
+    print()
+    print(f'{"*"*50}')
+    print()
+    print(f"Procesamiento total en {round(time.time() - start_time, 2)} segundos")
+    print()
+    print(f'{"*"*50}')
+
+
