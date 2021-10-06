@@ -44,7 +44,7 @@ def libromayorelnx(token, moneda, fechas, libromayor):
     return requests.get("https://api.teamplace.finneg.com/api/reports/"+libromayor+"?", params=parameters)
 
 
-def interface(token, interface):
+def interface(token, interface, fechas):
 
     parameters = {
         "ACCESS_TOKEN": token,
@@ -57,7 +57,7 @@ def interface(token, interface):
     return requests.get("https://api.teamplace.finneg.com/api/reports/"+interface+"?", params=parameters)
 
 
-def sanidad(token, moneda):
+def sanidad(token, moneda, fechas):
 
     parameters = {
         "ACCESS_TOKEN": token,
@@ -72,7 +72,7 @@ def sanidad(token, moneda):
     return requests.get("https://api.teamplace.finneg.com/api/reports/AnlisisisDeSanidad?", params=parameters)
 
 
-def suplementacion(token, moneda):
+def suplementacion(token, moneda, fechas):
 
     parameters = {
         "ACCESS_TOKEN": token,

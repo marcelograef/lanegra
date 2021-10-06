@@ -47,28 +47,28 @@ if __name__ == "__main__":
 
     parameters = [
         # deje cargada la de arbolcentrocosto!!!!
-        ['arbolCentroCosto', "Arbol TAG Centro de Costo50213"],
-        ['arbolCentroCosto', "CC COM AGR POR CULTIVO50203"],
-        ['arbolCentroCosto', "CC Cuadro de Resultado ELN50254"],
-        ['arbolCentroCosto', "CC Cuadro de Resultado ELN (CAMPAÑA)50255"],
-        ['arbolCentroCosto', "CC ESTRUCTURA50221"],
-        ['arbolCentroCosto', "CC GANADEROS POR ESTABLECIMIENTOS50202"],
-        ['arbolCentroCosto', "CC Indirectos por Establec.50218"],
-        ['arbolCentroCosto', "CC Indirectos, ADM y Gs Financ.50205"],
-        ['arbolCentroCosto', "CC POR ESTABLECIMIENTO50198"],
-        ['arbolCentroCosto', "CC Prueba50252"],
-        ['arbolCentroCosto', "CENTROS DE COSTO_STD"],
-        ['arbolCentroCosto', "Centros de Costo (bis)50251"],
-        ['arbolCentroCosto', "CLASIFICACION CUADRO RESULTADO50225"],
-        ['arbolCentroCosto', "DIRECTORIO - AGRICULTURA50227"],
-        ['arbolCentroCosto', "INFORME GESTIÓN AGRÍCOLA - ELN50191"],
-        ['arbolCentroCosto', "INFORME GESTIÓN GANADERA - ELN50199"],
-        ['arbolCentroCosto', "INFORME GESTIÓN GANADERA - ELN POR ACTIVIDAD50200"],
-        ['arbolCentroCosto', "Jurisdicciones50171"],
-        ['arbolCentroCosto', "TAG - MB La Asunción50219"],
+        ['Int_Dim_Centro_Costo_Arbol', "Arbol TAG Centro de Costo50213"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC COM AGR POR CULTIVO50203"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC Cuadro de Resultado ELN50254"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC Cuadro de Resultado ELN (CAMPAÑA)50255"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC ESTRUCTURA50221"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC GANADEROS POR ESTABLECIMIENTOS50202"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC Indirectos por Establec.50218"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC Indirectos, ADM y Gs Financ.50205"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC POR ESTABLECIMIENTO50198"],
+        ['Int_Dim_Centro_Costo_Arbol', "CC Prueba50252"],
+        ['Int_Dim_Centro_Costo_Arbol', "CENTROS DE COSTO_STD"],
+        ['Int_Dim_Centro_Costo_Arbol', "Centros de Costo (bis)50251"],
+        ['Int_Dim_Centro_Costo_Arbol', "CLASIFICACION CUADRO RESULTADO50225"],
+        ['Int_Dim_Centro_Costo_Arbol', "DIRECTORIO - AGRICULTURA50227"],
+        ['Int_Dim_Centro_Costo_Arbol', "INFORME GESTIÓN AGRÍCOLA - ELN50191"],
+        ['Int_Dim_Centro_Costo_Arbol', "INFORME GESTIÓN GANADERA - ELN50199"],
+        ['Int_Dim_Centro_Costo_Arbol', "INFORME GESTIÓN GANADERA - ELN POR ACTIVIDAD50200"],
+        ['Int_Dim_Centro_Costo_Arbol', "Jurisdicciones50171"],
+        ['Int_Dim_Centro_Costo_Arbol', "TAG - MB La Asunción50219"],
         ['Int_Dim_Categoria_Hacienda_Arbol', "HACIENDACATEGORIA_STD"],
         ['Int_Dim_Categoria_Producto_Arbol', "PRODUCTOS_STD"],
-        ['arbolLabor', "LABOR_STD"]
+        ['Int_Dim_Labor_Arbol', "LABOR_STD"]
     ]
 
     process_errors = []

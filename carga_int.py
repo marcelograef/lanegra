@@ -107,7 +107,7 @@ if __name__ == "__main__":
                 # functions.deleteTable(table[1])
                 if len(myObj) > 0:
                     dfs.append(pd.DataFrame(myObj))
-        
+
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), table[1])
             # functions.auditoria(table[1], response_process.Proceso_Key)
@@ -129,10 +129,10 @@ if __name__ == "__main__":
 
                 if len(myObj) > 0:
                     dfs.append(pd.DataFrame(myObj))
-        
+
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), table[1])
-                
+
     conexion.commit()
 
     for st in stock:
@@ -152,13 +152,13 @@ if __name__ == "__main__":
                 token, monedas[x], st[0], fechas, agrupa_por)
 
             myObj = response.json()
-            
+
             if len(myObj) > 0:
                 dfs.append(pd.DataFrame(myObj))
-        
+
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), st[1])
-            
+
     conexion.commit()
     for lme in libromayorelnx:
         dfs = []
@@ -175,10 +175,10 @@ if __name__ == "__main__":
             print(datetime.now())
             print(response)
             myObj = response.json()
-            
+
             if len(myObj) > 0:
                 dfs.append(pd.DataFrame(myObj))
-        
+
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), lme[1])
 
@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
                 if len(myObj) > 0:
                     dfs.append(pd.DataFrame(myObj))
-        
+
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), lme[1])
 
@@ -209,7 +209,7 @@ if __name__ == "__main__":
     conexion.commit()
     for table2 in mainstables2:
 
-        response = api_requests.interface(token, table2[0])
+        response = api_requests.interface(token, table2[0], fechas)
 
         myObj = response.json()
 
@@ -248,10 +248,10 @@ if __name__ == "__main__":
 
             if len(myObj) > 0:
                     dfs.append(pd.DataFrame(myObj))
-        
+
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), lote[1])
-           
+
 
     conexion.commit()
 
@@ -270,7 +270,7 @@ if __name__ == "__main__":
 
             if len(myObj) > 0:
                 dfs.append(pd.DataFrame(myObj))
-        
+
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), table[1])
 
