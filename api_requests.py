@@ -16,6 +16,9 @@ def init():
 
 
 def check_token(myObj):
+    if type(myObj) == list:
+        return True
+
     if 'error' in myObj.keys():
         if myObj['error'] == 'invalid token':
             return False

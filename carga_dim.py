@@ -84,13 +84,12 @@ if __name__ == "__main__":
         for dim in dimensions:
 
             myObj = []
-            loop = 0
-            while loop == 0:
+            while True:
                 response = api_requests.dimension(token, dim[0])
                 myObj = response.json()
 
                 if api_requests.check_token(myObj) == True:
-                    loop = 1
+                    break
 
                 token = api_requests.init().text
 
@@ -111,15 +110,14 @@ if __name__ == "__main__":
                 if (rama[0] == dimw[1]):
 
                     myObj = []
-                    loop = 0
-                    while loop == 0:
+                    while True:
                         response = api_requests.dimensions_w_parameters(
                             token, dimw[0], rama[1])
 
                         myObj = response.json()
 
                         if api_requests.check_token(myObj) == True:
-                            loop = 1
+                            break
 
                         token = api_requests.init().text
 
