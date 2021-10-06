@@ -34,7 +34,9 @@ if __name__ == "__main__":
 
     print()
     print("get_date_range()")
-    print(get_date_range())
+    print(fechas)
+    #fechas = functions.get_date_range()
+    print(fechas)
 
     # Está aparte por que se envie una vez con dol y otra por pes, además del parametro tipo moneda en 1
     conDobleMoneda = [
@@ -88,7 +90,7 @@ if __name__ == "__main__":
     token = response.text
 
     for table in consumosProduccion:
-
+        dfs = []
         monedas = ["PES", "DOL"]
         dimension = ["DIMCTC", "DIMMAQ"]
 
@@ -103,11 +105,17 @@ if __name__ == "__main__":
                     field_dict['TIPO_DIMENSION'] = dimension[y]
 
                 # functions.deleteTable(table[1])
-                functions.insertDimension(pd.DataFrame(myObj), table[1])
-                # functions.auditoria(table[1], response_process.Proceso_Key)
+                if len(myObj) > 0:
+                    dfs.append(pd.DataFrame(myObj))
+        
+        if len(dfs) > 0:
+            functions.insertDimension(pd.concat(dfs), table[1])
+            # functions.auditoria(table[1], response_process.Proceso_Key)
     conexion.commit()
-    for table in conDobleMoneda:
 
+
+    for table in conDobleMoneda:
+        dfs = []
         monedas = ["PES", "DOL"]
         # Agregue la dimesion moneda por que esta hardcodead un solo tipo DIMCTC y dim DIMMAQ
         dimension = ["DIMCTC", "DIMMAQ"]
@@ -119,13 +127,16 @@ if __name__ == "__main__":
                 print(response)
                 myObj = response.json()
 
-                # functions.deleteTable(table[1])
-                functions.insertDimension(pd.DataFrame(myObj), table[1])
-                # functions.auditoria(table[1], response_process.Proceso_Key)
+                if len(myObj) > 0:
+                    dfs.append(pd.DataFrame(myObj))
+        
+        if len(dfs) > 0:
+            functions.insertDimension(pd.concat(dfs), table[1])
+                
     conexion.commit()
 
     for st in stock:
-
+        dfs = []
         monedas = ["PES", "DOL"]
         agrupa_por = -1
 
@@ -141,13 +152,16 @@ if __name__ == "__main__":
                 token, monedas[x], st[0], fechas, agrupa_por)
 
             myObj = response.json()
-
-            # functions.deleteTable(st[1])
-            functions.insertDimension(pd.DataFrame(myObj), st[1])
-            # functions.auditoria(st[1], response_process.Proceso_Key)
+            
+            if len(myObj) > 0:
+                dfs.append(pd.DataFrame(myObj))
+        
+        if len(dfs) > 0:
+            functions.insertDimension(pd.concat(dfs), st[1])
+            
     conexion.commit()
     for lme in libromayorelnx:
-
+        dfs = []
         monedas = ["PES", "DOL"]
 
         for x in range(0, len(monedas)):
@@ -161,14 +175,17 @@ if __name__ == "__main__":
             print(datetime.now())
             print(response)
             myObj = response.json()
+            
+            if len(myObj) > 0:
+                dfs.append(pd.DataFrame(myObj))
+        
+        if len(dfs) > 0:
+            functions.insertDimension(pd.concat(dfs), lme[1])
 
-            # functions.deleteTable(lme[1])
-            functions.insertDimension(pd.DataFrame(myObj), lme[1])
-            # functions.auditoria(lme[1], response_process.Proceso_Key)
     conexion.commit()
 
     for lme in libromayoreln:
-
+        dfs = []
         monedas = ["PES", "DOL"]
         dimension = ["DIMCTC", "DIMMAQ"]
 
@@ -182,9 +199,13 @@ if __name__ == "__main__":
                 for field_dict in myObj:
                     field_dict['TIPO_DIMENSION'] = dimension[y]
 
-                    # functions.deleteTable(lme[1])
-                    functions.insertDimension(pd.DataFrame(myObj), lme[1])
-                    # functions.auditoria(lme[1], response_process.Proceso_Key)
+                if len(myObj) > 0:
+                    dfs.append(pd.DataFrame(myObj))
+        
+        if len(dfs) > 0:
+            functions.insertDimension(pd.concat(dfs), lme[1])
+
+
     conexion.commit()
     for table2 in mainstables2:
 
@@ -197,6 +218,8 @@ if __name__ == "__main__":
         # functions.auditoria(table2[1], response_process.Proceso_Key)
 
     conexion.commit()
+
+
     for planif in planificaciones:
 
         response = api_requests.planificaciones(token, planif[0])
@@ -209,7 +232,11 @@ if __name__ == "__main__":
         functions.insertDimension(pd.DataFrame(myObj), planif[1])
         # functions.auditoria(planif[1], response_process.Proceso_Key)
     conexion.commit()
+
+
     for lote in analisislote:
+
+        dfs = []
 
         monedas = [0, 1]
 
@@ -219,13 +246,19 @@ if __name__ == "__main__":
             print(response)
             myObj = response.json()
 
-            # functions.deleteTable(lote[1])
-            functions.insertDimension(pd.DataFrame(myObj), lote[1])
-            # functions.auditoria(lote[1], response_process.Proceso_Key)
+            if len(myObj) > 0:
+                    dfs.append(pd.DataFrame(myObj))
+        
+        if len(dfs) > 0:
+            functions.insertDimension(pd.concat(dfs), lote[1])
+           
 
     conexion.commit()
+
+
     for table in ingresosYEgresos:
 
+        dfs = []
         monedas = ["PES", "DOL"]
 
         for x in range(0, len(monedas)):
@@ -235,9 +268,12 @@ if __name__ == "__main__":
             print(response)
             myObj = response.json()
 
-            # functions.deleteTable(table[1])
-            functions.insertDimension(pd.DataFrame(myObj), table[1])
-            # functions.auditoria(table[1], response_process.Proceso_Key)
+            if len(myObj) > 0:
+                dfs.append(pd.DataFrame(myObj))
+        
+        if len(dfs) > 0:
+            functions.insertDimension(pd.concat(dfs), table[1])
+
 
     # close the connection to the database.
     conexion.commit()
