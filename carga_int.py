@@ -98,14 +98,15 @@ if __name__ == "__main__":
             for y in range(0, len(dimension)):
 
                 myObj = []
-                while True:
+                loop = 0
+                while loop == 0:
                     response = api_requests.int_conMoneda(
                         token, monedas[x], table[0], fechas, dimension[y])
 
                     myObj = response.json()
 
                     if api_requests.check_token(myObj) == True:
-                        break
+                        loop = 1
 
                     token = api_requests.init().text
 
@@ -130,14 +131,15 @@ if __name__ == "__main__":
             for y in range(0, len(dimension)):
 
                 myObj = []
-                while True:
+                loop = 0
+                while loop == 0:
                     response = api_requests.int_conMoneda(
                         token, monedas[x], table[0], fechas, dimension[y])  # remplaze 'DIMCTC' por dimension
                     print(response)
                     myObj = response.json()
 
                     if api_requests.check_token(myObj) == True:
-                        break
+                        loop = 1
 
                     token = api_requests.init().text
 
@@ -163,14 +165,15 @@ if __name__ == "__main__":
         for x in range(0, len(monedas)):
 
             myObj = []
-            while True:
+            loop = 0
+            while loop == 0:
                 response = api_requests.int_stock(
                     token, monedas[x], st[0], fechas, agrupa_por)
 
                 myObj = response.json()
 
                 if api_requests.check_token(myObj) == True:
-                    break
+                    loop = 1
 
                 token = api_requests.init().text
 
@@ -188,7 +191,8 @@ if __name__ == "__main__":
         for x in range(0, len(monedas)):
 
             myObj = []
-            while True:
+            loop = 0
+            while loop == 0:
                 print(datetime.now())
                 response = api_requests.libromayorelnx(
                     token, monedas[x], fechas, lme[0])
@@ -197,7 +201,7 @@ if __name__ == "__main__":
                 myObj = response.json()
 
                 if api_requests.check_token(myObj) == True:
-                    break
+                    loop = 1
 
                 token = api_requests.init().text
 
@@ -218,14 +222,15 @@ if __name__ == "__main__":
             for y in range(0, len(dimension)):
 
                 myObj = []
-                while True:
+                loop = 0
+                while loop == 0:
                     response = api_requests.libromayoreln(
                         token, monedas[x], fechas,  dimension[y])
                     print(response)
                     myObj = response.json()
 
                     if api_requests.check_token(myObj) == True:
-                        break
+                        loop = 1
 
                     token = api_requests.init().text
 
@@ -242,13 +247,14 @@ if __name__ == "__main__":
     for table2 in mainstables2:
 
         myObj = []
-        while True:
+        loop = 0
+        while loop == 0:
             response = api_requests.interface(token, table2[0], fechas)
 
             myObj = response.json()
 
             if api_requests.check_token(myObj) == True:
-                break
+                loop = 1
 
             token = api_requests.init().text
 
@@ -261,7 +267,8 @@ if __name__ == "__main__":
     for planif in planificaciones:
 
         myObj = []
-        while True:
+        loop = 0
+        while loop == 0:
             response = api_requests.planificaciones(token, planif[0])
 
             print(response)
@@ -269,9 +276,8 @@ if __name__ == "__main__":
             myObj = response.json()
 
             if api_requests.check_token(myObj) == True:
-                break
+                loop = 1
             token = api_requests.init().text
-
 
         # functions.deleteTable(planif[1])
         functions.insertDimension(pd.DataFrame(myObj), planif[1])
@@ -287,16 +293,17 @@ if __name__ == "__main__":
         for x in range(0, len(monedas)):
 
             myObj = []
-            while True:
-                response = api_requests.LoteAna(token, monedas[x], lote[0], fechas)
+            loop = 0
+            while loop == 0:
+                response = api_requests.LoteAna(
+                    token, monedas[x], lote[0], fechas)
                 print(response)
                 myObj = response.json()
 
                 if api_requests.check_token(myObj) == True:
-                    break
+                    loop = 1
 
                 token = api_requests.init().text
-
 
             if len(myObj) > 0:
                 dfs.append(pd.DataFrame(myObj))
@@ -313,17 +320,18 @@ if __name__ == "__main__":
 
         for x in range(0, len(monedas)):
             myObj = []
-            while True:
+            loop = 0
+            while loop == 0:
                 response = api_requests.int_ingresosYEgresos(
                     token, monedas[x], table[0], fechas)
                 print(response)
                 myObj = response.json()
 
                 if api_requests.check_token(myObj) == True:
-                    break
+                    loop = 1
 
                 token = api_requests.init().text
-                
+
             if len(myObj) > 0:
                 dfs.append(pd.DataFrame(myObj))
 
