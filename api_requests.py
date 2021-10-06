@@ -15,6 +15,13 @@ def init():
     return requests.get("https://api.teamplace.finneg.com/api/oauth/token?", params=parameters)
 
 
+def check_token(myObj):
+    if 'error' in myObj.keys():
+        if myObj['error'] == 'invalid token':
+            return False
+    return True
+
+
 def libromayoreln(token, moneda, fechas, dimension):  # = remplaze'DIMCTC' por dimension
     print(dimension)
     print(moneda)

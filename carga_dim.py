@@ -35,7 +35,8 @@ if __name__ == "__main__":
         ['conceptoValorizacion', "Int_Dim_Concepto_Valorizacion"],
         ['Organizacion', "Int_Dim_Organizacion"],
         ['labor', "Int_Dim_Labor"],
-        ['actividad', "Int_Dim_Actividad"] # este endpoint no está implementado
+        # este endpoint no está implementado
+        ['actividad', "Int_Dim_Actividad"]
     ]
 
     dimensions_w_parameters = [
@@ -50,7 +51,8 @@ if __name__ == "__main__":
         ['Int_Dim_Centro_Costo_Arbol', "Arbol TAG Centro de Costo50213"],
         ['Int_Dim_Centro_Costo_Arbol', "CC COM AGR POR CULTIVO50203"],
         ['Int_Dim_Centro_Costo_Arbol', "CC Cuadro de Resultado ELN50254"],
-        ['Int_Dim_Centro_Costo_Arbol', "CC Cuadro de Resultado ELN (CAMPAÑA)50255"],
+        ['Int_Dim_Centro_Costo_Arbol',
+            "CC Cuadro de Resultado ELN (CAMPAÑA)50255"],
         ['Int_Dim_Centro_Costo_Arbol', "CC ESTRUCTURA50221"],
         ['Int_Dim_Centro_Costo_Arbol', "CC GANADEROS POR ESTABLECIMIENTOS50202"],
         ['Int_Dim_Centro_Costo_Arbol', "CC Indirectos por Establec.50218"],
@@ -63,7 +65,8 @@ if __name__ == "__main__":
         ['Int_Dim_Centro_Costo_Arbol', "DIRECTORIO - AGRICULTURA50227"],
         ['Int_Dim_Centro_Costo_Arbol', "INFORME GESTIÓN AGRÍCOLA - ELN50191"],
         ['Int_Dim_Centro_Costo_Arbol', "INFORME GESTIÓN GANADERA - ELN50199"],
-        ['Int_Dim_Centro_Costo_Arbol', "INFORME GESTIÓN GANADERA - ELN POR ACTIVIDAD50200"],
+        ['Int_Dim_Centro_Costo_Arbol',
+            "INFORME GESTIÓN GANADERA - ELN POR ACTIVIDAD50200"],
         ['Int_Dim_Centro_Costo_Arbol', "Jurisdicciones50171"],
         ['Int_Dim_Centro_Costo_Arbol', "TAG - MB La Asunción50219"],
         ['Int_Dim_Categoria_Hacienda_Arbol', "HACIENDACATEGORIA_STD"],
@@ -73,18 +76,22 @@ if __name__ == "__main__":
 
     process_errors = []
 
-    response = api_requests.init()
-
-    token = response.text
+    token = api_requests.init().text
 
     print(token)
 
     try:
         for dim in dimensions:
 
-            response = api_requests.dimension(token, dim[0])
+            myObj = []
+            while True:
+                response = api_requests.dimension(token, dim[0])
+                myObj = response.json()
 
-            myObj = response.json()
+                if api_requests.check_token(myObj) == True:
+                    break
+
+                token = api_requests.init().text
 
             df = pd.DataFrame(myObj)
 
@@ -101,10 +108,18 @@ if __name__ == "__main__":
             for rama in parameters:
 
                 if (rama[0] == dimw[1]):
-                    response = api_requests.dimensions_w_parameters(
-                        token, dimw[0], rama[1])
 
-                    myObj = response.json()
+                    myObj = []
+                    while True:
+                        response = api_requests.dimensions_w_parameters(
+                            token, dimw[0], rama[1])
+
+                        myObj = response.json()
+
+                        if api_requests.check_token(myObj) == True:
+                            break
+
+                        token = api_requests.init().text
 
                     functions.insertDimension(pd.DataFrame(myObj), dimw[1])
 
@@ -114,7 +129,7 @@ if __name__ == "__main__":
         #print("Ocurrió un error al cargar dimensiones con parametros ", e_dimw)
         process_errors.append(dimw)
 
-    if len(process_errors) >0:
+    if len(process_errors) > 0:
         print("*******************")
         print("Tablas que no cargaron")
         for e in process_errors:
@@ -123,8 +138,7 @@ if __name__ == "__main__":
     print()
     print(f'{"*"*50}')
     print()
-    print(f"Procesamiento total en {round(time.time() - start_time, 2)} segundos")
+    print(
+        f"Procesamiento total en {round(time.time() - start_time, 2)} segundos")
     print()
     print(f'{"*"*50}')
-
-

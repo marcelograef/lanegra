@@ -97,10 +97,18 @@ if __name__ == "__main__":
         for x in range(0, len(monedas)):
             for y in range(0, len(dimension)):
 
-                response = api_requests.int_conMoneda(
-                    token, monedas[x], table[0], fechas, dimension[y])
+                myObj = []
+                while True:
+                    response = api_requests.int_conMoneda(
+                        token, monedas[x], table[0], fechas, dimension[y])
 
-                myObj = response.json()
+                    myObj = response.json()
+
+                    if api_requests.check_token(myObj) == True:
+                        break
+
+                    token = api_requests.init().text
+
                 for field_dict in myObj:
                     field_dict['TIPO_DIMENSION'] = dimension[y]
 
@@ -113,7 +121,6 @@ if __name__ == "__main__":
             # functions.auditoria(table[1], response_process.Proceso_Key)
     conexion.commit()
 
-
     for table in conDobleMoneda:
         dfs = []
         monedas = ["PES", "DOL"]
@@ -122,10 +129,17 @@ if __name__ == "__main__":
         for x in range(0, len(monedas)):
             for y in range(0, len(dimension)):
 
-                response = api_requests.int_conMoneda(
-                    token, monedas[x], table[0], fechas, dimension[y])  # remplaze 'DIMCTC' por dimension
-                print(response)
-                myObj = response.json()
+                myObj = []
+                while True:
+                    response = api_requests.int_conMoneda(
+                        token, monedas[x], table[0], fechas, dimension[y])  # remplaze 'DIMCTC' por dimension
+                    print(response)
+                    myObj = response.json()
+
+                    if api_requests.check_token(myObj) == True:
+                        break
+
+                    token = api_requests.init().text
 
                 if len(myObj) > 0:
                     dfs.append(pd.DataFrame(myObj))
@@ -148,10 +162,17 @@ if __name__ == "__main__":
 
         for x in range(0, len(monedas)):
 
-            response = api_requests.int_stock(
-                token, monedas[x], st[0], fechas, agrupa_por)
+            myObj = []
+            while True:
+                response = api_requests.int_stock(
+                    token, monedas[x], st[0], fechas, agrupa_por)
 
-            myObj = response.json()
+                myObj = response.json()
+
+                if api_requests.check_token(myObj) == True:
+                    break
+
+                token = api_requests.init().text
 
             if len(myObj) > 0:
                 dfs.append(pd.DataFrame(myObj))
@@ -166,15 +187,19 @@ if __name__ == "__main__":
 
         for x in range(0, len(monedas)):
 
-            response = api_requests.init()
+            myObj = []
+            while True:
+                print(datetime.now())
+                response = api_requests.libromayorelnx(
+                    token, monedas[x], fechas, lme[0])
+                print(datetime.now())
+                print(response)
+                myObj = response.json()
 
-            token = response.text
-            print(datetime.now())
-            response = api_requests.libromayorelnx(
-                token, monedas[x], fechas, lme[0])
-            print(datetime.now())
-            print(response)
-            myObj = response.json()
+                if api_requests.check_token(myObj) == True:
+                    break
+
+                token = api_requests.init().text
 
             if len(myObj) > 0:
                 dfs.append(pd.DataFrame(myObj))
@@ -192,10 +217,18 @@ if __name__ == "__main__":
         for x in range(0, len(monedas)):
             for y in range(0, len(dimension)):
 
-                response = api_requests.libromayoreln(
-                    token, monedas[x], fechas,  dimension[y])
-                print(response)
-                myObj = response.json()
+                myObj = []
+                while True:
+                    response = api_requests.libromayoreln(
+                        token, monedas[x], fechas,  dimension[y])
+                    print(response)
+                    myObj = response.json()
+
+                    if api_requests.check_token(myObj) == True:
+                        break
+
+                    token = api_requests.init().text
+
                 for field_dict in myObj:
                     field_dict['TIPO_DIMENSION'] = dimension[y]
 
@@ -205,13 +238,19 @@ if __name__ == "__main__":
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), lme[1])
 
-
     conexion.commit()
     for table2 in mainstables2:
 
-        response = api_requests.interface(token, table2[0], fechas)
+        myObj = []
+        while True:
+            response = api_requests.interface(token, table2[0], fechas)
 
-        myObj = response.json()
+            myObj = response.json()
+
+            if api_requests.check_token(myObj) == True:
+                break
+
+            token = api_requests.init().text
 
         # functions.deleteTable(table2[1])
         functions.insertDimension(pd.DataFrame(myObj), table2[1])
@@ -219,20 +258,25 @@ if __name__ == "__main__":
 
     conexion.commit()
 
-
     for planif in planificaciones:
 
-        response = api_requests.planificaciones(token, planif[0])
+        myObj = []
+        while True:
+            response = api_requests.planificaciones(token, planif[0])
 
-        print(response)
+            print(response)
 
-        myObj = response.json()
+            myObj = response.json()
+
+            if api_requests.check_token(myObj) == True:
+                break
+            token = api_requests.init().text
+
 
         # functions.deleteTable(planif[1])
         functions.insertDimension(pd.DataFrame(myObj), planif[1])
         # functions.auditoria(planif[1], response_process.Proceso_Key)
     conexion.commit()
-
 
     for lote in analisislote:
 
@@ -242,19 +286,25 @@ if __name__ == "__main__":
 
         for x in range(0, len(monedas)):
 
-            response = api_requests.LoteAna(token, monedas[x], lote[0], fechas)
-            print(response)
-            myObj = response.json()
+            myObj = []
+            while True:
+                response = api_requests.LoteAna(token, monedas[x], lote[0], fechas)
+                print(response)
+                myObj = response.json()
+
+                if api_requests.check_token(myObj) == True:
+                    break
+
+                token = api_requests.init().text
+
 
             if len(myObj) > 0:
-                    dfs.append(pd.DataFrame(myObj))
+                dfs.append(pd.DataFrame(myObj))
 
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), lote[1])
 
-
     conexion.commit()
-
 
     for table in ingresosYEgresos:
 
@@ -262,18 +312,23 @@ if __name__ == "__main__":
         monedas = ["PES", "DOL"]
 
         for x in range(0, len(monedas)):
+            myObj = []
+            while True:
+                response = api_requests.int_ingresosYEgresos(
+                    token, monedas[x], table[0], fechas)
+                print(response)
+                myObj = response.json()
 
-            response = api_requests.int_ingresosYEgresos(
-                token, monedas[x], table[0], fechas)
-            print(response)
-            myObj = response.json()
+                if api_requests.check_token(myObj) == True:
+                    break
 
+                token = api_requests.init().text
+                
             if len(myObj) > 0:
                 dfs.append(pd.DataFrame(myObj))
 
         if len(dfs) > 0:
             functions.insertDimension(pd.concat(dfs), table[1])
-
 
     # close the connection to the database.
     conexion.commit()
