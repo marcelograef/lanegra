@@ -24,6 +24,7 @@ def get_connection():
     except Exception as e:
         print("Ocurrió un error al conectar a SQL Server: ", e)
 
+
 def get_cursor():
     try:
 
@@ -34,7 +35,8 @@ def get_cursor():
     except Exception as e:
         print("Ocurrió un error al conectar a SQL Server: ", e)
 
-if __name__ == '__main__':
+
+def main():
     try:
 
         conexion = pyodbc.connect(
@@ -50,3 +52,7 @@ if __name__ == '__main__':
 
     cursor.commit()
     cursor.close()
+
+
+if __name__ == '__main__':
+    main()

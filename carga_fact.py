@@ -1,6 +1,7 @@
 """
     @author Juan Pablo Mantelli
 """
+from db import main
 import json
 import requests
 import pandas as pd
@@ -14,6 +15,8 @@ conexion = get_connection()
 cursor = get_cursor()
 
 if __name__ == "__main__":
+
+    main()
 
     print()
     print("Starting carga int")

@@ -11,7 +11,11 @@ import time
 import api_requests
 import functions
 
+from db import main
+
 if __name__ == "__main__":
+
+    main()
 
     id_lote = functions.getLoteKey('Carga_Int_Dim_Py')
     response_process = functions.getLastProcessKeyByLote(id_lote)
