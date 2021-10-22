@@ -1,7 +1,7 @@
 """
     @author Juan Pablo Mantelli
 """
-from db import main
+from bd import main
 import json
 import requests
 import pandas as pd

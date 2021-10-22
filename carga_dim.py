@@ -11,7 +11,7 @@ import time
 import api_requests
 import functions
 
-from db import main
+from bd import main
 
 if __name__ == "__main__":
 
