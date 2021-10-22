@@ -82,7 +82,6 @@ if __name__ == "__main__":
 
     try:
         for dim in dimensions:
-
             myObj = []
             while True:
                 response = api_requests.dimension(token, dim[0])
@@ -104,11 +103,8 @@ if __name__ == "__main__":
 
     try:
         for dimw in dimensions_w_parameters:
-
             for rama in parameters:
-
                 if (rama[0] == dimw[1]):
-
                     myObj = []
                     while True:
                         response = api_requests.dimensions_w_parameters(
@@ -129,11 +125,17 @@ if __name__ == "__main__":
         #print("Ocurrió un error al cargar dimensiones con parametros ", e_dimw)
         process_errors.append(dimw)
 
-    if len(process_errors) > 0:
+    if len(process_errors) == 0:
         print("*******************")
         print("Tablas que no cargaron")
         for e in process_errors:
             print(e)
+        functions.updateProcessState(response_process.Proceso_Key, 2)
+    else:
+        functions.updateProcessState(response_process.Proceso_Key, 3)
+
+    # si falla todo
+    # functions.updateProcessState(response_process.Proceso_Key, 4)
 
     print()
     print(f'{"*"*50}')

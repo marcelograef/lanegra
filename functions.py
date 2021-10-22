@@ -61,6 +61,11 @@ def insertDimension(data, TABLE_NAME):
     for col in data.columns:
         data[col] = data[col].apply(process_data)
 
+    """ data['fecha_proce_escritura'] =
+    data['Proceso_Key'] =
+
+                       (datetime.datetime.now(), process_key)) """
+
     #print('Comenzando la carga de la tabla',TABLE_NAME)
     data.to_sql(TABLE_NAME, con=get_engine(), index=False, if_exists='replace')
 

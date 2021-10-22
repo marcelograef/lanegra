@@ -26,7 +26,7 @@ def run_script():
 
     id_lote = functions.getLoteKey('Carga_Int_Dim_Py')
     functions.insertProcessKey(id_lote, fecha_inicio, fecha_fin)
-    theproc = subprocess.Popen(['python', 'carga_int.py'])
+    theproc = subprocess.Popen(['python', 'carga_fact.py'])
     output = theproc.communicate()
     return render_template("template1.html")
 
