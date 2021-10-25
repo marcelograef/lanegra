@@ -24,7 +24,7 @@ def run_script():
     fecha_inicio = data['report-start']
     fecha_fin = data['report-finish']
 
-    id_lote = functions.getLoteKey('Carga_Int_Dim_Py')
+    id_lote = functions.getLoteKey('Carga_Int_Fact_Py')
     functions.insertProcessKey(id_lote, fecha_inicio, fecha_fin)
     theproc = subprocess.Popen(['python', 'carga_fact.py'])
     output = theproc.communicate()

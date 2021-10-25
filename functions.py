@@ -34,7 +34,7 @@ def process_data(value):
     return value
 
 
-def insertDimension(data, TABLE_NAME):
+def insertDimension(data, TABLE_NAME, process_key):
 
     start_time = time.time()
 
@@ -61,12 +61,10 @@ def insertDimension(data, TABLE_NAME):
     for col in data.columns:
         data[col] = data[col].apply(process_data)
 
-    """ data['fecha_proce_escritura'] =
-    data['Proceso_Key'] =
+    data['fecha_proce_escritura'] = datetime.datetime.now()
+    data['Proceso_Key'] = process_key
 
-                       (datetime.datetime.now(), process_key)) """
-
-    #print('Comenzando la carga de la tabla',TABLE_NAME)
+    # print('Comenzando la carga de la tabla',TABLE_NAME)
     data.to_sql(TABLE_NAME, con=get_engine(), index=False, if_exists='replace')
 
     print(f'{round(time.time() - start_time, 2)}seg')
@@ -101,6 +99,8 @@ def insertProcessKey(id_lote, fecha_inicio, fecha_fin):
                        fecha_inicio + "','" + fecha_fin + "',0,(?),0,3)", (datetime.datetime.now(), id_lote))
         cursor.commit()
 
+        Esq_Proc_Dw_Inconsistencias
+
 
 def updateProcessState(process_key, state):
     with get_cursor() as cursor:
@@ -121,14 +121,23 @@ def auditoria(table, process_key):
                        (datetime.datetime.now(), process_key))
 
 
+def insertInconsistencia(proceso_key, inconsitencia, tabla):
+    with get_cursor() as cursor:
+
+        cursor.execute(f"""INSERT INTO [dbo].[Esq_Proc_Dw_Inconsistencias] (Process_key, Fecha,  Inconsistencia, TablaInt_Carga)
+        VALUES ({proceso_key}, {datetime.datetime.now()}, '{inconsitencia}', '{tabla}'')"""
+
+        cursor.commit()
+
+
 def last_day_of_month(any_day):
     # this will never fail
     # get close to the end of the month for any day, and add 4 days 'over'
-    next_month = any_day.replace(day=28) + datetime.timedelta(days=4)
+    next_month=any_day.replace(day=28) + datetime.timedelta(days=4)
     # subtract the number of remaining 'overage' days to get last day of current month, or said programattically said, the previous day of the first of next month
     return next_month - datetime.timedelta(days=next_month.day)
 
 
 def get_date_range():
-    today = datetime.datetime.today()
+    today=datetime.datetime.today()
     return [today.replace(day=1), last_day_of_month(today)]

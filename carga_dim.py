@@ -84,8 +84,8 @@ if __name__ == "__main__":
 
     print(token)
 
-    try:
-        for dim in dimensions:
+    for dim in dimensions:
+        try:
             myObj = []
             while True:
                 response = api_requests.dimension(token, dim[0])
@@ -98,15 +98,15 @@ if __name__ == "__main__":
 
             df = pd.DataFrame(myObj)
 
-            functions.insertDimension(df, dim[1])
+            functions.insertDimension(df, dim[1], response_process.Proceso_Key)
 
-    except Exception as e_dim:
-        # traceback.print_exc()
-        # print("Ocurrió un error al cargar dimensiones ", e_dim)
-        process_errors.append(dim)
+        except Exception as e_dim:
+            # traceback.print_exc()
+            # print("Ocurrió un error al cargar dimensiones ", e_dim)
+            process_errors.append(dim)
 
-    try:
-        for dimw in dimensions_w_parameters:
+    for dimw in dimensions_w_parameters:
+        try:
             for rama in parameters:
                 if (rama[0] == dimw[1]):
                     myObj = []
@@ -121,25 +121,27 @@ if __name__ == "__main__":
 
                         token = api_requests.init().text
 
-                    functions.insertDimension(pd.DataFrame(myObj), dimw[1])
+                    functions.insertDimension(pd.DataFrame(
+                        myObj), dimw[1], response_process.Proceso_Key)
 
     # close the connection to the database.
 
-    except Exception as e_dimw:
-        #print("Ocurrió un error al cargar dimensiones con parametros ", e_dimw)
-        process_errors.append(dimw)
+        except Exception as e_dimw:
+            #print("Ocurrió un error al cargar dimensiones con parametros ", e_dimw)
+            process_errors.append(dimw)
 
     if len(process_errors) == 0:
         print("*******************")
         print("Tablas que no cargaron")
         for e in process_errors:
             print(e)
+            functions.insertInconsistencia(response_process.Proceso_Key, 'No se pudieron cargar los datos', e)
+
         functions.updateProcessState(response_process.Proceso_Key, 2)
+    elif len(process_errors) == len(dimensions_w_parameters) + len(dimensions):
+        functions.updateProcessState(response_process.Proceso_Key, 4)
     else:
         functions.updateProcessState(response_process.Proceso_Key, 3)
-
-    # si falla todo
-    # functions.updateProcessState(response_process.Proceso_Key, 4)
 
     print()
     print(f'{"*"*50}')
