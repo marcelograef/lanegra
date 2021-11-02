@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
                     # functions.deleteTable(table[1])
                     if len(myObj) > 0:
-                        dfs.append(pd.DataFrame(myObj))
+                        dfs.append(pd.DataFrame(myObj, index='TRANSACCIONID'))
 
             if len(dfs) > 0:
                 functions.insertDimension(
@@ -188,7 +188,7 @@ if __name__ == "__main__":
                     token = api_requests.init().text
 
                 if len(myObj) > 0:
-                    dfs.append(pd.DataFrame(myObj))
+                    dfs.append(pd.DataFrame(myObj), index='PRODUCTOID')
 
             if len(dfs) > 0:
                 functions.insertDimension(
@@ -223,7 +223,7 @@ if __name__ == "__main__":
                     token = api_requests.init().text
 
                 if len(myObj) > 0:
-                    dfs.append(pd.DataFrame(myObj))
+                    dfs.append(pd.DataFrame(myObj), indent='TRANSACCIONID')
 
             if len(dfs) > 0:
                 functions.insertDimension(
