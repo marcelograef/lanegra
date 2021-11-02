@@ -119,6 +119,7 @@ if __name__ == "__main__":
                     pd.concat(dfs), table[1], response_process.Proceso_Key)
                 # functions.auditoria(table[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -154,6 +155,7 @@ if __name__ == "__main__":
                 functions.insertDimension(
                     pd.concat(dfs), table[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -194,6 +196,7 @@ if __name__ == "__main__":
                 functions.insertDimension(
                     pd.concat(dfs), st[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', st[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -229,6 +232,7 @@ if __name__ == "__main__":
                 functions.insertDimension(
                     pd.concat(dfs), lme[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', lme[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -267,6 +271,7 @@ if __name__ == "__main__":
                 functions.insertDimension(
                     pd.concat(dfs), lme[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', lme[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -293,6 +298,7 @@ if __name__ == "__main__":
                 myObj), table2[1], response_process.Proceso_Key)
             # functions.auditoria(table2[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', table2[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -319,6 +325,7 @@ if __name__ == "__main__":
                 myObj), planif[1], response_process.Proceso_Key)
             # functions.auditoria(planif[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', planif[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -353,6 +360,7 @@ if __name__ == "__main__":
                 functions.insertDimension(
                     pd.concat(dfs), lote[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', lote[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -385,6 +393,7 @@ if __name__ == "__main__":
                 functions.insertDimension(
                     pd.concat(dfs), table[1], response_process.Proceso_Key)
         except:
+            print(traceback.print_exc())
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
             total_tables['fail'] = total_tables['fail'] + 1
