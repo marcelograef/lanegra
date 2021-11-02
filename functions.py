@@ -40,7 +40,7 @@ def insertDimension(data, TABLE_NAME, process_key):
 
     print(f'{"-"*50}')
     print(f'{TABLE_NAME}')
-    # print(datetime.datetime.now())
+    # print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     columns_fixed = []
     for col in data.columns:
@@ -61,7 +61,7 @@ def insertDimension(data, TABLE_NAME, process_key):
     for col in data.columns:
         data[col] = data[col].apply(process_data)
 
-    data['fecha_proce_escritura'] = datetime.datetime.now()
+    data['fecha_proce_escritura'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     data['Proceso_Key'] = process_key
 
     # print('Comenzando la carga de la tabla',TABLE_NAME)
@@ -96,7 +96,7 @@ def getLastProcessKeyByLote(idLote):
 def insertProcessKey(id_lote, fecha_inicio, fecha_fin):
     with get_cursor() as cursor:
         cursor.execute("INSERT INTO [dbo].[Esq_Proc_Dw_Procesos] ([Fecha_Inicio_Ejecucion],[Fecha_Desde_Proceso],[Fecha_Hasta_Proceso],[Estado_Key],[Lote_Key],[IdControl], IdUsuarioEjecucion) VALUES((?),'" +
-                       fecha_inicio + "','" + fecha_fin + "',0,(?),0,3)", (datetime.datetime.now(), id_lote))
+                       fecha_inicio + "','" + fecha_fin + "',0,(?),0,3)", (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), id_lote))
         cursor.commit()
 
         Esq_Proc_Dw_Inconsistencias
@@ -118,14 +118,19 @@ def updateTable(table, field, value):
 def auditoria(table, process_key):
     with get_cursor() as cursor:
         cursor.execute("UPDATE " + table + " SET fecha_proce_escritura = (?), Proceso_Key = (?)",
-                       (datetime.datetime.now(), process_key))
+                       (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), process_key))
 
 
 def insertInconsistencia(proceso_key, inconsitencia, tabla):
     with get_cursor() as cursor:
-
-        cursor.execute(f"""INSERT INTO [dbo].[Esq_Proc_Dw_Inconsistencias] (Process_key, Fecha,  Inconsistencia, TablaInt_Carga)
-        VALUES ({proceso_key}, {datetime.datetime.now()}, '{inconsitencia}', '{tabla}'')""")
+        query = f"""INSERT INTO [dbo].[Esq_Proc_Dw_Inconsistencias] (Proceso_Key, Fecha,  Inconsistencia, TablaInt_Carga)
+            VALUES ('{proceso_key}', '{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', '{inconsitencia}', '{tabla}')"""
+        print()
+        print()
+        print(query)
+        print()
+        print()
+        cursor.execute(query)
 
         cursor.commit()
 
