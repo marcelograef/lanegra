@@ -125,7 +125,7 @@ def insertInconsistencia(proceso_key, inconsitencia, tabla):
     with get_cursor() as cursor:
 
         cursor.execute(f"""INSERT INTO [dbo].[Esq_Proc_Dw_Inconsistencias] (Process_key, Fecha,  Inconsistencia, TablaInt_Carga)
-        VALUES ({proceso_key}, {datetime.datetime.now()}, '{inconsitencia}', '{tabla}'')"""
+        VALUES ({proceso_key}, {datetime.datetime.now()}, '{inconsitencia}', '{tabla}'')""")
 
         cursor.commit()
 
