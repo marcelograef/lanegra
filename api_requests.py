@@ -26,8 +26,6 @@ def check_token(myObj):
 
 
 def libromayoreln(token, moneda, fechas, dimension):  # = remplaze'DIMCTC' por dimension
-    print(dimension)
-    print(moneda)
     parameters = {
         "ACCESS_TOKEN": token,
         "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),
@@ -42,7 +40,6 @@ def libromayoreln(token, moneda, fechas, dimension):  # = remplaze'DIMCTC' por d
 
 
 def libromayorelnx(token, moneda, fechas, libromayor):
-    print(moneda)
     parameters = {
         "ACCESS_TOKEN": token,
         "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),
@@ -99,8 +96,6 @@ def suplementacion(token, moneda, fechas):
 
 # = remplaze'DIMCTC' por dimension
 def int_conMoneda(token, moneda, reporte, fechas, dimension):
-    print(dimension)
-    print(moneda)
     parameters = {
         "ACCESS_TOKEN": token,
         "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),
@@ -114,7 +109,6 @@ def int_conMoneda(token, moneda, reporte, fechas, dimension):
 
 
 def int_stock(token, moneda, reporte, fechas, agrupa_por):
-    print(moneda)
     parameters = {
         "ACCESS_TOKEN": token,
         "PARAMWEBREPORT_fechaDesde": fechas[0].strftime('%Y-%m-%d'),
@@ -137,7 +131,6 @@ def planificaciones(token, reporte):
         empresa = '[EMPRE01,ESC47]'
     elif reporte == 'planificacionForestal':
         empresa = '[CYD43]'
-    print(empresa)
     parameters = {
         "ACCESS_TOKEN": token,
         "PARAMWEBREPORT_Empresa": empresa,

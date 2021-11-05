@@ -1,37 +1,49 @@
 """
     @author Juan Pablo Mantelli
 """
-from bd import main
 import json
 import requests
 import pandas as pd
 from datetime import datetime
 import traceback
 
+import datetime
+
 import api_requests
 import functions
+
+from bd import main
 from bd import get_connection, get_cursor
 
-conexion = get_connection()
-cursor = get_cursor()
+withDB = True
+
+if withDB:
+    conexion = get_connection()
+    cursor = get_cursor()
 
 if __name__ == "__main__":
-
-    main()
+    if withDB:
+        main()
 
     print()
     print("Starting carga int")
     print()
 
-    id_lote = functions.getLoteKey('Carga_Int_Fact_Py')
+    if withDB:
+        id_lote = functions.getLoteKey('Carga_Int_Fact_Py')
 
-    response_process = functions.getLastProcessKeyByLote(id_lote)
-    functions.updateProcessState(response_process.Proceso_Key, 1)
+        response_process = functions.getLastProcessKeyByLote(id_lote)
+        functions.updateProcessState(response_process.Proceso_Key, 1)
 
-    fechas = [
-        response_process.fecha_desde_proceso,
-        response_process.fecha_hasta_proceso
-    ]
+    try:
+        fechas = [
+            response_process.fecha_desde_proceso,
+            response_process.fecha_hasta_proceso
+        ]
+    except:
+        fechas = [datetime.datetime(2021, 1, 1, 0, 0),
+                  datetime.datetime(2021, 1, 31, 0, 0)]
+
     print(fechas)
 
     # Está aparte por que se envie una vez con dol y otra por pes, además del parametro tipo moneda en 1
@@ -87,6 +99,9 @@ if __name__ == "__main__":
 
     total_tables = {'tables': len(consumosProduccion), 'fail': 0}
 
+    print()
+    print(f"{'*'*50}")
+    print('consumosProduccion')
     for table in consumosProduccion:
         try:
             dfs = []
@@ -108,27 +123,50 @@ if __name__ == "__main__":
 
                         token = api_requests.init().text
 
-                    for field_dict in myObj:
-                        field_dict['TIPO_DIMENSION'] = dimension[y]
+                    """ for field_dict in myObj:
+                        print(myObj)
+                        print(dimension, dimension[y])
+
+                        field_dict['TIPO_DIMENSION'] = dimension[y] """
 
                     # functions.deleteTable(table[1])
+
+                    print(f"Config {monedas[x]} {dimension[y]}")
+                    # print(myObj)
                     if len(myObj) > 0:
-                        dfs.append(pd.DataFrame(myObj, index=[0]))
+                        df = pd.DataFrame(myObj)
+
+                        df['TIPO_DIMENSION'] = dimension[y]
+
+                        print(
+                            f"Shape: {df.shape}")
+                        dfs.append(df)
 
             if len(dfs) > 0:
-                functions.insertDimension(
-                    pd.concat(dfs), table[1], response_process.Proceso_Key)
-                # functions.auditoria(table[1], response_process.Proceso_Key)
+                print(f"Shape TOTAL {pd.concat(dfs).shape}")
+                if withDB:
+                    functions.insertDimension(
+                        pd.concat(dfs), table[1], response_process.Proceso_Key)
+                    # functions.auditoria(table[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
-            functions.insertInconsistencia(
-                response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
+            if withDB:
+                functions.insertInconsistencia(
+                    response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
+
             total_tables['fail'] = total_tables['fail'] + 1
 
-    conexion.commit()
+    if withDB:
+        conexion.commit()
+
+    print()
+    print(f"{'*'*50}")
 
     total_tables['tables'] = total_tables['tables'] + len(conDobleMoneda)
+
+    print('conDobleMoneda')
     for table in conDobleMoneda:
+        myObj = None
         try:
             dfs = []
             monedas = ["PES", "DOL"]
@@ -141,7 +179,6 @@ if __name__ == "__main__":
                     while True:
                         response = api_requests.int_conMoneda(
                             token, monedas[x], table[0], fechas, dimension[y])  # remplaze 'DIMCTC' por dimension
-                        print(response)
                         myObj = response.json()
 
                         if api_requests.check_token(myObj) == True:
@@ -149,22 +186,42 @@ if __name__ == "__main__":
 
                         token = api_requests.init().text
 
+                    print(f"Config {monedas[x]} {dimension[y]}")
+                    # print(myObj)
                     if len(myObj) > 0:
-                        dfs.append(pd.DataFrame(myObj, index=[0]))
+                        df = pd.DataFrame(myObj)
+
+                        print(
+                            f"Shape: {df.shape}")
+                        dfs.append(df)
 
             if len(dfs) > 0:
-                functions.insertDimension(
-                    pd.concat(dfs), table[1], response_process.Proceso_Key)
+                print(f"Shape TOTAL {pd.concat(dfs).shape}")
+                if withDB:
+                    functions.insertDimension(
+                        pd.concat(dfs), table[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
-            functions.insertInconsistencia(
-                response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
+            print()
+            print(myObj)
+            print()
+            if withDB:
+                functions.insertInconsistencia(
+                    response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
+
             total_tables['fail'] = total_tables['fail'] + 1
 
-    conexion.commit()
+    if withDB:
+        conexion.commit()
+
+    print()
+    print(f"{'*'*50}")
 
     total_tables['tables'] = total_tables['tables'] + len(stock)
+
+    print('stock')
     for st in stock:
+        myObj = None
         try:
             dfs = []
             monedas = ["PES", "DOL"]
@@ -191,20 +248,34 @@ if __name__ == "__main__":
                     token = api_requests.init().text
 
                 if len(myObj) > 0:
-                    dfs.append(pd.DataFrame(myObj), index=[0])
+                    df = pd.DataFrame(myObj)
+
+                    print(
+                        f"Shape: {df.shape}")
+                    dfs.append(df)
 
             if len(dfs) > 0:
-                functions.insertDimension(
-                    pd.concat(dfs), st[1], response_process.Proceso_Key)
+                print(f"Shape TOTAL {pd.concat(dfs).shape}")
+                if withDB:
+                    functions.insertDimension(
+                        pd.concat(dfs), st[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
-            functions.insertInconsistencia(
-                response_process.Proceso_Key, 'No se pudieron cargar los datos', st[1])
+            if withDB:
+                functions.insertInconsistencia(
+                    response_process.Proceso_Key, 'No se pudieron cargar los datos', st[1])
+
             total_tables['fail'] = total_tables['fail'] + 1
 
-    conexion.commit()
+    if withDB:
+        conexion.commit()
+
+    print()
+    print(f"{'*'*50}")
 
     total_tables['tables'] = total_tables['tables'] + len(libromayorelnx)
+
+    print('libromayorelnx')
     for lme in libromayorelnx:
         try:
             dfs = []
@@ -214,11 +285,8 @@ if __name__ == "__main__":
 
                 myObj = []
                 while True:
-                    print(datetime.now())
                     response = api_requests.libromayorelnx(
                         token, monedas[x], fechas, lme[0])
-                    print(datetime.now())
-                    print(response)
                     myObj = response.json()
 
                     if api_requests.check_token(myObj) == True:
@@ -227,20 +295,34 @@ if __name__ == "__main__":
                     token = api_requests.init().text
 
                 if len(myObj) > 0:
-                    dfs.append(pd.DataFrame(myObj), indent='TRANSACCIONID')
+                    df = pd.DataFrame(myObj)
+
+                    print(
+                        f"Shape: {df.shape}")
+                    dfs.append(df)
 
             if len(dfs) > 0:
-                functions.insertDimension(
-                    pd.concat(dfs), lme[1], response_process.Proceso_Key)
+                print(f"Shape TOTAL {pd.concat(dfs).shape}")
+                if withDB:
+                    functions.insertDimension(
+                        pd.concat(dfs), lme[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
-            functions.insertInconsistencia(
-                response_process.Proceso_Key, 'No se pudieron cargar los datos', lme[1])
+            if withDB:
+                functions.insertInconsistencia(
+                    response_process.Proceso_Key, 'No se pudieron cargar los datos', lme[1])
+
             total_tables['fail'] = total_tables['fail'] + 1
 
-    conexion.commit()
+    if withDB:
+        conexion.commit()
+
+    print()
+    print(f"{'*'*50}")
 
     total_tables['tables'] = total_tables['tables'] + len(libromayoreln)
+
+    print('libromayoreln')
     for lme in libromayoreln:
         try:
             dfs = []
@@ -254,7 +336,6 @@ if __name__ == "__main__":
                     while True:
                         response = api_requests.libromayoreln(
                             token, monedas[x], fechas,  dimension[y])
-                        print(response)
                         myObj = response.json()
 
                         if api_requests.check_token(myObj) == True:
@@ -262,24 +343,40 @@ if __name__ == "__main__":
 
                         token = api_requests.init().text
 
-                    for field_dict in myObj:
-                        field_dict['TIPO_DIMENSION'] = dimension[y]
+                    """ for field_dict in myObj:
+                        field_dict['TIPO_DIMENSION'] = dimension[y] """
 
                     if len(myObj) > 0:
-                        dfs.append(pd.DataFrame(myObj))
+                        df = pd.DataFrame(myObj)
+                        df['TIPO_DIMENSION'] = dimension[y]
+
+                        print(
+                            f"Shape: {df.shape}")
+                        dfs.append(df)
 
             if len(dfs) > 0:
-                functions.insertDimension(
-                    pd.concat(dfs), lme[1], response_process.Proceso_Key)
+                print(f"Shape TOTAL {pd.concat(dfs).shape}")
+
+                if withDB:
+                    functions.insertDimension(
+                        pd.concat(dfs), lme[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
-            functions.insertInconsistencia(
-                response_process.Proceso_Key, 'No se pudieron cargar los datos', lme[1])
+            if withDB:
+                functions.insertInconsistencia(
+                    response_process.Proceso_Key, 'No se pudieron cargar los datos', lme[1])
+
             total_tables['fail'] = total_tables['fail'] + 1
 
-    conexion.commit()
+    if withDB:
+        conexion.commit()
+
+    print()
+    print(f"{'*'*50}")
 
     total_tables['tables'] = total_tables['tables'] + len(mainstables2)
+
+    print('mainstables2')
     for table2 in mainstables2:
 
         try:
@@ -294,36 +391,49 @@ if __name__ == "__main__":
 
                 token = api_requests.init().text
 
-            # functions.deleteTable(table2[1])
-            functions.insertDimension(pd.DataFrame(
-                myObj), table2[1], response_process.Proceso_Key)
+            df = pd.DataFrame(myObj)
+            print(f"Shape TOTAL {df.shape}")
+
+            if withDB:
+                # functions.deleteTable(table2[1])
+                functions.insertDimension(
+                    df, table2[1], response_process.Proceso_Key)
             # functions.auditoria(table2[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
-            functions.insertInconsistencia(
-                response_process.Proceso_Key, 'No se pudieron cargar los datos', table2[1])
+            if withDB:
+                functions.insertInconsistencia(
+                    response_process.Proceso_Key, 'No se pudieron cargar los datos', table2[1])
+
             total_tables['fail'] = total_tables['fail'] + 1
 
-    conexion.commit()
+    if withDB:
+        conexion.commit()
+
+    print()
+    print(f"{'*'*50}")
 
     total_tables['tables'] = total_tables['tables'] + len(planificaciones)
+
+    print('planificaciones')
     for planif in planificaciones:
         try:
             myObj = []
             while True:
                 response = api_requests.planificaciones(token, planif[0])
-
-                print(response)
-
                 myObj = response.json()
 
                 if api_requests.check_token(myObj) == True:
                     break
                 token = api_requests.init().text
 
-            # functions.deleteTable(planif[1])
-            functions.insertDimension(pd.DataFrame(
-                myObj), planif[1], response_process.Proceso_Key)
+            df = pd.DataFrame(myObj)
+            print(f"Shape TOTAL {df.shape}")
+
+            if withDB:
+                # functions.deleteTable(planif[1])
+                functions.insertDimension(
+                    df, planif[1], response_process.Proceso_Key)
             # functions.auditoria(planif[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
@@ -331,9 +441,15 @@ if __name__ == "__main__":
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', planif[1])
             total_tables['fail'] = total_tables['fail'] + 1
 
-    conexion.commit()
+    if withDB:
+        conexion.commit()
+
+    print()
+    print(f"{'*'*50}")
 
     total_tables['tables'] = total_tables['tables'] + len(analisislote)
+
+    print('analisislote')
     for lote in analisislote:
         try:
             dfs = []
@@ -346,7 +462,6 @@ if __name__ == "__main__":
                 while True:
                     response = api_requests.LoteAna(
                         token, monedas[x], lote[0], fechas)
-                    print(response)
                     myObj = response.json()
 
                     if api_requests.check_token(myObj) == True:
@@ -355,20 +470,35 @@ if __name__ == "__main__":
                     token = api_requests.init().text
 
                 if len(myObj) > 0:
-                    dfs.append(pd.DataFrame(myObj))
+                    df = pd.DataFrame(myObj)
+
+                    print(
+                        f"Shape: {df.shape}")
+                    dfs.append(df)
 
             if len(dfs) > 0:
-                functions.insertDimension(
-                    pd.concat(dfs), lote[1], response_process.Proceso_Key)
+                print(f"Shape TOTAL {pd.concat(dfs).shape}")
+
+                if withDB:
+                    functions.insertDimension(
+                        pd.concat(dfs), lote[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
-            functions.insertInconsistencia(
-                response_process.Proceso_Key, 'No se pudieron cargar los datos', lote[1])
+            if withDB:
+                functions.insertInconsistencia(
+                    response_process.Proceso_Key, 'No se pudieron cargar los datos', lote[1])
+
             total_tables['fail'] = total_tables['fail'] + 1
 
-    conexion.commit()
+    if withDB:
+        conexion.commit()
+
+    print()
+    print(f"{'*'*50}")
 
     total_tables['tables'] = total_tables['tables'] + len(ingresosYEgresos)
+
+    print('ingresosYEgresos')
     for table in ingresosYEgresos:
         try:
             dfs = []
@@ -379,7 +509,6 @@ if __name__ == "__main__":
                 while True:
                     response = api_requests.int_ingresosYEgresos(
                         token, monedas[x], table[0], fechas)
-                    print(response)
                     myObj = response.json()
 
                     if api_requests.check_token(myObj) == True:
@@ -388,24 +517,48 @@ if __name__ == "__main__":
                     token = api_requests.init().text
 
                 if len(myObj) > 0:
-                    dfs.append(pd.DataFrame(myObj))
+                    df = pd.DataFrame(myObj)
+
+                    print(
+                        f"Shape: {df.shape}")
+                    dfs.append(df)
 
             if len(dfs) > 0:
-                functions.insertDimension(
-                    pd.concat(dfs), table[1], response_process.Proceso_Key)
+                print(f"Shape TOTAL {pd.concat(dfs).shape}")
+
+                if withDB:
+                    functions.insertDimension(
+                        pd.concat(dfs), table[1], response_process.Proceso_Key)
         except:
             print(traceback.print_exc())
-            functions.insertInconsistencia(
-                response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
+            if withDB:
+                functions.insertInconsistencia(
+                    response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
+
             total_tables['fail'] = total_tables['fail'] + 1
 
+    print()
+    print(f"{'*'*50}")
+    print("Guardando estado fina")
     # close the connection to the database.
-    conexion.commit()
+
+    if withDB:
+        conexion.commit()
 
     if total_tables['tables'] == total_tables['fail']:
-        functions.updateProcessState(response_process.Proceso_Key, 4)
+        if withDB:
+            functions.updateProcessState(response_process.Proceso_Key, 4)
     elif total_tables['fail'] > 0:
-        functions.updateProcessState(response_process.Proceso_Key, 3)
+        if withDB:
+            functions.updateProcessState(response_process.Proceso_Key, 3)
     else:
-        functions.updateProcessState(response_process.Proceso_Key, 2)
-    cursor.close()
+        if withDB:
+            functions.updateProcessState(response_process.Proceso_Key, 2)
+
+    if withDB:
+        cursor.close()
+
+    print()
+    print(f"{'*'*50}")
+    print("Carga finalizada")
+    print(f"{'*'*50}")
