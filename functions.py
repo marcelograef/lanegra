@@ -81,7 +81,7 @@ def deleteTable(table):
 def getLoteKey(descripcion):
     with get_cursor() as cursor:
         cursor.execute(
-            "SELECT Lote_Key FROM [Eln_dw].[dbo].[Esq_Proc_Dw_Lotes] WHERE Descripcion = '" + descripcion + "'")
+            "SELECT Lote_Key FROM [dbo].[Esq_Proc_Dw_Lotes] WHERE Descripcion = '" + descripcion + "'")
         result = cursor.fetchone()
         for r in result:
             return r
@@ -90,13 +90,13 @@ def getLoteKey(descripcion):
 def getLastProcessKeyByLote(idLote):
     with get_cursor() as cursor:
         cursor.execute(
-            "SELECT MAX([Proceso_Key]) as Proceso_Key, fecha_desde_proceso, fecha_hasta_proceso FROM [Eln_dw].[dbo].[Esq_Proc_Dw_Procesos] WHERE Lote_Key = (?) AND [Estado_Key] = 0 group by fecha_desde_proceso, fecha_hasta_proceso", (idLote))
+            "SELECT MAX([Proceso_Key]) as Proceso_Key, fecha_desde_proceso, fecha_hasta_proceso FROM [dbo].[Esq_Proc_Dw_Procesos] WHERE Lote_Key = (?) AND [Estado_Key] = 0 group by fecha_desde_proceso, fecha_hasta_proceso", (idLote))
         return cursor.fetchone()
 
 
 def insertProcessKey(id_lote, fecha_inicio, fecha_fin):
     with get_cursor() as cursor:
-        cursor.execute("INSERT INTO [Eln_dw].[dbo].[Esq_Proc_Dw_Procesos] ([Fecha_Inicio_Ejecucion],[Fecha_Desde_Proceso],[Fecha_Hasta_Proceso],[Estado_Key],[Lote_Key],[IdControl], IdUsuarioEjecucion) VALUES((?),'" +
+        cursor.execute("INSERT INTO [dbo].[Esq_Proc_Dw_Procesos] ([Fecha_Inicio_Ejecucion],[Fecha_Desde_Proceso],[Fecha_Hasta_Proceso],[Estado_Key],[Lote_Key],[IdControl], IdUsuarioEjecucion) VALUES((?),'" +
                        fecha_inicio + "','" + fecha_fin + "',0,(?),0,3)", (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), id_lote))
         cursor.commit()
 
@@ -104,7 +104,7 @@ def insertProcessKey(id_lote, fecha_inicio, fecha_fin):
 def updateProcessState(process_key, state):
     with get_cursor() as cursor:
         cursor.execute(
-            "UPDATE [Eln_dw].[dbo].[Esq_Proc_Dw_Procesos] SET [Estado_Key] = (?)  WHERE [Proceso_Key] = (?)", (state, process_key))
+            "UPDATE [dbo].[Esq_Proc_Dw_Procesos] SET [Estado_Key] = (?)  WHERE [Proceso_Key] = (?)", (state, process_key))
         cursor.commit()
 
 
@@ -122,7 +122,7 @@ def auditoria(table, process_key):
 
 def insertInconsistencia(proceso_key, inconsitencia, tabla):
     with get_cursor() as cursor:
-        query = f"""INSERT INTO [Eln_dw].[dbo].[Esq_Proc_Dw_Inconsistencias] (Proceso_Key, Fecha,  Inconsistencia, TablaInt_Carga)
+        query = f"""INSERT INTO [dbo].[Esq_Proc_Dw_Inconsistencias] (Proceso_Key, Fecha,  Inconsistencia, TablaInt_Carga)
             VALUES ('{proceso_key}', '{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', '{inconsitencia}', '{tabla}')"""
         print()
         print()
