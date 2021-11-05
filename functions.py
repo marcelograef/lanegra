@@ -61,7 +61,8 @@ def insertDimension(data, TABLE_NAME, process_key):
     for col in data.columns:
         data[col] = data[col].apply(process_data)
 
-    data['fecha_proce_escritura'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data['fecha_proce_escritura'] = datetime.datetime.now().strftime(
+        "%Y-%m-%d %H:%M:%S")
     data['Proceso_Key'] = process_key
 
     # print('Comenzando la carga de la tabla',TABLE_NAME)
@@ -80,7 +81,7 @@ def deleteTable(table):
 def getLoteKey(descripcion):
     with get_cursor() as cursor:
         cursor.execute(
-            "SELECT Lote_Key FROM Esq_Proc_Dw_Lotes WHERE Descripcion = '" + descripcion + "'")
+            "SELECT Lote_Key FROM [Eln_dw].[dbo].[Esq_Proc_Dw_Lotes] WHERE Descripcion = '" + descripcion + "'")
         result = cursor.fetchone()
         for r in result:
             return r
@@ -89,23 +90,21 @@ def getLoteKey(descripcion):
 def getLastProcessKeyByLote(idLote):
     with get_cursor() as cursor:
         cursor.execute(
-            "SELECT MAX([Proceso_Key]) as Proceso_Key, fecha_desde_proceso, fecha_hasta_proceso FROM Esq_Proc_Dw_Procesos WHERE Lote_Key = (?) AND [Estado_Key] = 0 group by fecha_desde_proceso, fecha_hasta_proceso", (idLote))
+            "SELECT MAX([Proceso_Key]) as Proceso_Key, fecha_desde_proceso, fecha_hasta_proceso FROM [Eln_dw].[dbo].[Esq_Proc_Dw_Procesos] WHERE Lote_Key = (?) AND [Estado_Key] = 0 group by fecha_desde_proceso, fecha_hasta_proceso", (idLote))
         return cursor.fetchone()
 
 
 def insertProcessKey(id_lote, fecha_inicio, fecha_fin):
     with get_cursor() as cursor:
-        cursor.execute("INSERT INTO [dbo].[Esq_Proc_Dw_Procesos] ([Fecha_Inicio_Ejecucion],[Fecha_Desde_Proceso],[Fecha_Hasta_Proceso],[Estado_Key],[Lote_Key],[IdControl], IdUsuarioEjecucion) VALUES((?),'" +
+        cursor.execute("INSERT INTO [Eln_dw].[dbo].[Esq_Proc_Dw_Procesos] ([Fecha_Inicio_Ejecucion],[Fecha_Desde_Proceso],[Fecha_Hasta_Proceso],[Estado_Key],[Lote_Key],[IdControl], IdUsuarioEjecucion) VALUES((?),'" +
                        fecha_inicio + "','" + fecha_fin + "',0,(?),0,3)", (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), id_lote))
         cursor.commit()
-
-        Esq_Proc_Dw_Inconsistencias
 
 
 def updateProcessState(process_key, state):
     with get_cursor() as cursor:
         cursor.execute(
-            "UPDATE [dbo].[Esq_Proc_Dw_Procesos] SET [Estado_Key] = (?)  WHERE [Proceso_Key] = (?)", (state, process_key))
+            "UPDATE [Eln_dw].[dbo].[Esq_Proc_Dw_Procesos] SET [Estado_Key] = (?)  WHERE [Proceso_Key] = (?)", (state, process_key))
         cursor.commit()
 
 
@@ -123,7 +122,7 @@ def auditoria(table, process_key):
 
 def insertInconsistencia(proceso_key, inconsitencia, tabla):
     with get_cursor() as cursor:
-        query = f"""INSERT INTO [dbo].[Esq_Proc_Dw_Inconsistencias] (Proceso_Key, Fecha,  Inconsistencia, TablaInt_Carga)
+        query = f"""INSERT INTO [Eln_dw].[dbo].[Esq_Proc_Dw_Inconsistencias] (Proceso_Key, Fecha,  Inconsistencia, TablaInt_Carga)
             VALUES ('{proceso_key}', '{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', '{inconsitencia}', '{tabla}')"""
         print()
         print()
@@ -138,11 +137,11 @@ def insertInconsistencia(proceso_key, inconsitencia, tabla):
 def last_day_of_month(any_day):
     # this will never fail
     # get close to the end of the month for any day, and add 4 days 'over'
-    next_month=any_day.replace(day=28) + datetime.timedelta(days=4)
+    next_month = any_day.replace(day=28) + datetime.timedelta(days=4)
     # subtract the number of remaining 'overage' days to get last day of current month, or said programattically said, the previous day of the first of next month
     return next_month - datetime.timedelta(days=next_month.day)
 
 
 def get_date_range():
-    today=datetime.datetime.today()
+    today = datetime.datetime.today()
     return [today.replace(day=1), last_day_of_month(today)]
