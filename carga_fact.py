@@ -79,8 +79,8 @@ if __name__ == "__main__":
     ]
 
     stock = [
-        ['existenciaHaciendaELN', "int_StockXLote"],
-        ['existenciaHaciendaELN', "int_StockXLoteTropa"]
+        ['existenciaHaciendaELN', "Int_StockXLote"],
+        ['existenciaHaciendaELN', "Int_StockXLoteTropa"]
     ]
 
     libromayoreln = [
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     ]
 
     libromayorelnx = [
-        ['LIBROMAYORELNACTIVO', "int_Mayor_Activo"],
+        ['LIBROMAYORELNACTIVO', "Int_Mayor_Activo"],
         ['LIBROMAYORELNPASIVO', "Int_Mayor_Pasivo"],
         ['LIBROMAYORELNPN', "Int_Mayor_Pn"]
     ]
@@ -227,10 +227,10 @@ if __name__ == "__main__":
             monedas = ["PES", "DOL"]
             agrupa_por = -1
 
-            if st[1] == 'int_StockXLote':
+            if st[1] == 'Int_StockXLote':
                 agrupa_por = 1
 
-            if st[1] == 'int_StockXLoteTropa':
+            if st[1] == 'Int_StockXLoteTropa':
                 agrupa_por = 0
 
             for x in range(0, len(monedas)):
