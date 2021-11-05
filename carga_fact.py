@@ -84,7 +84,7 @@ if __name__ == "__main__":
     ]
 
     libromayoreln = [
-        ['LIBROMAYORELN', "Int_Libromayoreln"]
+        ['LIBROMAYORELN', "Int_LibroMayorELN"]
     ]
 
     libromayorelnx = [
