@@ -569,23 +569,19 @@ if __name__ == "__main__":
 
     print()
     print(f"{'*'*50}")
-    print("Guardando estado fina")
+    print("Guardando estado final")
     # close the connection to the database.
 
     if withDB:
         conexion.commit()
 
-    if total_tables['tables'] == total_tables['fail']:
-        if withDB:
+        if total_tables['tables'] == total_tables['fail']:
             functions.updateProcessState(response_process.Proceso_Key, 4)
-    elif total_tables['fail'] > 0:
-        if withDB:
+        elif total_tables['fail'] > 0:
             functions.updateProcessState(response_process.Proceso_Key, 3)
-    else:
-        if withDB:
+        else:
             functions.updateProcessState(response_process.Proceso_Key, 2)
 
-    if withDB:
         cursor.close()
 
     print()
