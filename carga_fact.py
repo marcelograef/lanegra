@@ -15,7 +15,7 @@ import functions
 from bd import main
 from bd import get_connection, get_cursor
 
-withDB = True
+withDB = False
 
 if withDB:
     conexion = get_connection()
@@ -123,12 +123,6 @@ if __name__ == "__main__":
 
                         token = api_requests.init().text
 
-                    """ for field_dict in myObj:
-                        print(myObj)
-                        print(dimension, dimension[y])
-
-                        field_dict['TIPO_DIMENSION'] = dimension[y] """
-
                     # functions.deleteTable(table[1])
 
                     print(f"Config {monedas[x]} {dimension[y]}")
@@ -148,8 +142,12 @@ if __name__ == "__main__":
                     functions.insertDimension(
                         pd.concat(dfs), table[1], response_process.Proceso_Key)
                     # functions.auditoria(table[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             if withDB:
                 functions.insertInconsistencia(
                     response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])
@@ -200,8 +198,12 @@ if __name__ == "__main__":
                 if withDB:
                     functions.insertDimension(
                         pd.concat(dfs), table[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             print()
             print(myObj)
             print()
@@ -259,8 +261,12 @@ if __name__ == "__main__":
                 if withDB:
                     functions.insertDimension(
                         pd.concat(dfs), st[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             if withDB:
                 functions.insertInconsistencia(
                     response_process.Proceso_Key, 'No se pudieron cargar los datos', st[1])
@@ -306,8 +312,12 @@ if __name__ == "__main__":
                 if withDB:
                     functions.insertDimension(
                         pd.concat(dfs), lme[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             if withDB:
                 functions.insertInconsistencia(
                     response_process.Proceso_Key, 'No se pudieron cargar los datos', lme[1])
@@ -360,8 +370,12 @@ if __name__ == "__main__":
                 if withDB:
                     functions.insertDimension(
                         pd.concat(dfs), lme[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             if withDB:
                 functions.insertInconsistencia(
                     response_process.Proceso_Key, 'No se pudieron cargar los datos', lme[1])
@@ -399,8 +413,12 @@ if __name__ == "__main__":
                 functions.insertDimension(
                     df, table2[1], response_process.Proceso_Key)
             # functions.auditoria(table2[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             if withDB:
                 functions.insertInconsistencia(
                     response_process.Proceso_Key, 'No se pudieron cargar los datos', table2[1])
@@ -435,8 +453,12 @@ if __name__ == "__main__":
                 functions.insertDimension(
                     df, planif[1], response_process.Proceso_Key)
             # functions.auditoria(planif[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             functions.insertInconsistencia(
                 response_process.Proceso_Key, 'No se pudieron cargar los datos', planif[1])
             total_tables['fail'] = total_tables['fail'] + 1
@@ -482,8 +504,12 @@ if __name__ == "__main__":
                 if withDB:
                     functions.insertDimension(
                         pd.concat(dfs), lote[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             if withDB:
                 functions.insertInconsistencia(
                     response_process.Proceso_Key, 'No se pudieron cargar los datos', lote[1])
@@ -529,8 +555,12 @@ if __name__ == "__main__":
                 if withDB:
                     functions.insertDimension(
                         pd.concat(dfs), table[1], response_process.Proceso_Key)
-        except:
+        except Exception as e:
+
             print(traceback.print_exc())
+            print()
+            print(e)
+            print()
             if withDB:
                 functions.insertInconsistencia(
                     response_process.Proceso_Key, 'No se pudieron cargar los datos', table[1])

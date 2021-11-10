@@ -105,7 +105,12 @@ def int_conMoneda(token, moneda, reporte, fechas, dimension):
         "PARAMWEBREPORT_dimension": dimension
     }
 
-    return requests.get("https://api.teamplace.finneg.com/api/reports/"+reporte+"?", params=parameters)
+    url = "https://api.teamplace.finneg.com/api/reports/"+reporte+"?"
+
+    print(f"URL: {url}")
+    print(f"PARAMETERS: {parameters}")
+
+    return requests.get(url, params=parameters)
 
 
 def int_stock(token, moneda, reporte, fechas, agrupa_por):
