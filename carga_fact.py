@@ -572,19 +572,24 @@ if __name__ == "__main__":
     print("Guardando estado final")
     # close the connection to the database.
 
+    status = 0
     if withDB:
         conexion.commit()
 
-        if total_tables['tables'] == total_tables['fail']:
-            functions.updateProcessState(response_process.Proceso_Key, 4)
-        elif total_tables['fail'] > 0:
-            functions.updateProcessState(response_process.Proceso_Key, 3)
-        else:
-            functions.updateProcessState(response_process.Proceso_Key, 2)
+    if total_tables['tables'] == total_tables['fail']:
+        status = 4
+    elif total_tables['fail'] > 0:
+        status = 3
+    else:
+        status = 2
 
+    if withDB:
+        if withDB:
+            functions.updateProcessState(response_process.Proceso_Key, status)
         cursor.close()
 
     print()
     print(f"{'*'*50}")
-    print("Carga finalizada")
+    print(
+        f"Carga finalizada de Proceso_Key {response_process.Proceso_Key} con status {status}")
     print(f"{'*'*50}")
