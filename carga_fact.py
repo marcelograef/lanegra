@@ -15,7 +15,7 @@ import functions
 from bd import main
 from bd import get_connection, get_cursor
 
-withDB = False
+withDB = True
 
 if withDB:
     conexion = get_connection()
@@ -131,6 +131,8 @@ if __name__ == "__main__":
                         df = pd.DataFrame(myObj)
 
                         df['TIPO_DIMENSION'] = dimension[y]
+                        df['MONEDA'] = monedas[x]
+                        df['DIM'] = dimension[y]
 
                         print(
                             f"Shape: {df.shape}")
@@ -188,6 +190,8 @@ if __name__ == "__main__":
                     # print(myObj)
                     if len(myObj) > 0:
                         df = pd.DataFrame(myObj)
+                        df['MONEDA'] = monedas[x]
+                        df['DIM'] = dimension[y]
 
                         print(
                             f"Shape: {df.shape}")
@@ -251,6 +255,7 @@ if __name__ == "__main__":
 
                 if len(myObj) > 0:
                     df = pd.DataFrame(myObj)
+                    df['MONEDA'] = monedas[x]
 
                     print(
                         f"Shape: {df.shape}")
@@ -302,6 +307,7 @@ if __name__ == "__main__":
 
                 if len(myObj) > 0:
                     df = pd.DataFrame(myObj)
+                    df['MONEDA'] = monedas[x]
 
                     print(
                         f"Shape: {df.shape}")
@@ -353,12 +359,11 @@ if __name__ == "__main__":
 
                         token = api_requests.init().text
 
-                    """ for field_dict in myObj:
-                        field_dict['TIPO_DIMENSION'] = dimension[y] """
-
                     if len(myObj) > 0:
                         df = pd.DataFrame(myObj)
                         df['TIPO_DIMENSION'] = dimension[y]
+                        df['MONEDA'] = monedas[x]
+                        df['DIM'] = dimension[y]
 
                         print(
                             f"Shape: {df.shape}")
@@ -493,6 +498,7 @@ if __name__ == "__main__":
 
                 if len(myObj) > 0:
                     df = pd.DataFrame(myObj)
+                    df['MONEDA'] = monedas[x]
 
                     print(
                         f"Shape: {df.shape}")
@@ -544,6 +550,7 @@ if __name__ == "__main__":
 
                 if len(myObj) > 0:
                     df = pd.DataFrame(myObj)
+                    df['MONEDA'] = monedas[x]
 
                     print(
                         f"Shape: {df.shape}")
