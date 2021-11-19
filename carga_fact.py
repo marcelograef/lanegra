@@ -1,19 +1,17 @@
 """
     @author Juan Pablo Mantelli
 """
-import json
-import requests
-import pandas as pd
-from datetime import datetime
-import traceback
-
 import datetime
+import json
+import traceback
+from datetime import date, datetime, timedelta
+
+import pandas as pd
+import requests
 
 import api_requests
 import functions
-
-from bd import main
-from bd import get_connection, get_cursor
+from bd import get_connection, get_cursor, main
 
 withDB = True
 
@@ -41,8 +39,12 @@ if __name__ == "__main__":
             response_process.fecha_hasta_proceso
         ]
     except:
-        fechas = [datetime.datetime(2021, 1, 1, 0, 0),
-                  datetime.datetime(2021, 1, 31, 0, 0)]
+        start_day = date.today().replace(day=1)
+        last_day = (date.today().replace(day=1) +
+                    timedelta(days=31)).replace(day=1) - timedelta(1)
+
+        fechas = [datetime(start_day.year, start_day.month, start_day.day, 0, 0),
+                  datetime(last_day.year, last_day.month, last_day.day, 0, 0)]
 
     print(fechas)
 
